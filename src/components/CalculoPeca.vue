@@ -89,29 +89,36 @@ export default {
   }),
   computed: {
     area() {
+      let arr_un = []
+      this.medidas.map(m => {
+        if (m.unidade === 'cm') arr_un.push(1)
+        else if (m.unidade === 'mm') arr_un.push(0.1)
+        else if (m.unidade === 'pol') arr_un.push(2.54)
+        else arr_un.push(0)
+      })
       let calculada = 0
       if (this.perfil === '') {
         return '0.00'
       }
       if (this.secao === 'Quadrado') {
         calculada = this.espessura ?
-          (4 * this.medidas[2].valor * (this.medidas[0].valor - this.medidas[2].valor))
-          : this.medidas[0].valor ** 2
+          (4 * this.medidas[2].valor * arr_un[2] * (this.medidas[0].valor * arr_un[0] - this.medidas[2].valor * arr_un[2]))
+          : (this.medidas[0].valor * arr_un[0]) ** 2
       }
       else if (this.secao === 'Redondo') {
         calculada = this.espessura ?
-          (this.pi * this.medidas[2].valor * (this.medidas[0].valor - this.medidas[2].valor))
-          : (this.pi * this.medidas[0].valor ** 2) / 4
+          (this.pi * this.medidas[2].valor * arr_un[2] * (this.medidas[0].valor * arr_un[0] - this.medidas[2].valor * arr_un[2]))
+          : (this.pi * (this.medidas[0].valor * arr_un[0]) ** 2) / 4
       }
       else if (this.secao === 'Retangular') {
         calculada = this.espessura ?
-          (2 * this.medidas[2].valor * (parseInt(this.medidas[0].valor) + parseInt(this.medidas[1].valor) - 2 * this.medidas[2].valor))
-          : this.medidas[0].valor * this.medidas[1].valor
+          (2 * this.medidas[2].valor * arr_un[2] * (parseInt(this.medidas[0].valor) * arr_un[0] + parseInt(this.medidas[1].valor) * arr_un[1] - 2 * this.medidas[2].valor * arr_un[2]))
+          : this.medidas[0].valor * arr_un[0] * this.medidas[1].valor * arr_un[1]
       }
       else if (this.secao === 'Sextavado') {
         calculada = this.espessura ?
-          (2 * 3 ** 0.5 * this.medidas[2].valor * (this.medidas[0].valor - this.medidas[2].valor))
-          : (3 ** 0.5) * (this.medidas[0].valor ** 2) / 2
+          (2 * 3 ** 0.5 * this.medidas[2].valor * arr_un[2] * (this.medidas[0].valor * arr_un[0] - this.medidas[2].valor * arr_un[2]))
+          : (3 ** 0.5) * ((this.medidas[0].valor * arr_un[0]) ** 2) / 2
       }
       return (calculada).toFixed(2)
     },
