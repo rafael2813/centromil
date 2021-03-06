@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-container px-0 fluid>
     <v-card class="mx-2 my-2" tile elevation=5>
       <v-row class="px-4 pt-5 d-flex justify-space-between align-center">
         <v-col>
@@ -57,7 +57,7 @@
             VALOR TOTAL = {{ valor_total | moeda | virgula }}
           </div>
     </v-card>
-  </v-app>
+  </v-container>
 </template>
 
 <script>
@@ -79,6 +79,7 @@ export default {
       { id: 1, dimensao: 'Largura', unidade: null, valor: null, visivel: true },
       { id: 2, dimensao: 'Espessura', unidade: null, valor: null, visivel: true },
     ],
+    espessura: false,
     comprimento: null,
     peso_especifico: null,
     valor_kg: null,
@@ -86,19 +87,31 @@ export default {
   }),
   computed: {
     area() {
+      let calculada = 0
+      if (this.perfil === '') {
+        return '0.00'
+      }
       if (this.secao === 'Quadrado') {
-        return (this.medidas[0].valor ** 2).toFixed(2)
+        calculada = this.espessura ?
+          (4 * this.medidas[2].valor * (this.medidas[0].valor - this.medidas[2].valor))
+          : this.medidas[0].valor ** 2
       }
       else if (this.secao === 'Redondo') {
-        return ((this.pi * this.medidas[0].valor ** 2) / 4).toFixed(2)
+        calculada = this.espessura ?
+          (this.pi * this.medidas[2].valor * (this.medidas[0].valor - this.medidas[2].valor))
+          : (this.pi * this.medidas[0].valor ** 2) / 4
       }
       else if (this.secao === 'Retangular') {
-        return (this.medidas[0].valor * this.medidas[1].valor).toFixed(2)
+        calculada = this.espessura ?
+          (2 * this.medidas[2].valor * (parseInt(this.medidas[0].valor) + parseInt(this.medidas[1].valor) - 2 * this.medidas[2].valor))
+          : this.medidas[0].valor * this.medidas[1].valor
       }
       else if (this.secao === 'Sextavado') {
-        return (0).toFixed(2)
+        calculada = this.espessura ?
+          (2 * 3 ** 0.5 * this.medidas[2].valor * (this.medidas[0].valor - this.medidas[2].valor))
+          : (3 ** 0.5) * (this.medidas[0].valor ** 2) / 2
       }
-      return '0.00'
+      return (calculada).toFixed(2)
     },
     volume() {
       return (this.area * this.comprimento * 100).toFixed(2)
@@ -118,18 +131,23 @@ export default {
   },
   methods: {
     perfil_tubo() {
-      this.medidas[2].visivel = this.perfil !== 'Tubo'
+      let vazio = this.perfil === 'Tubo'
+      this.medidas[2].visivel = vazio
+      this.medidas[2].valor = vazio ? this.medidas[2].valor : 0
+      this.espessura = vazio
     },
     secao_transversal() {
       if (this.secao === 'Quadrado') {
         this.medidas[0].dimensao = 'Lado'
         this.medidas[1].visivel = false
+        this.medidas[1].valor = 0
         this.formula = 'Lado x Lado'
       }
       else if (this.secao === 'Redondo') {
         this.medidas[0].dimensao = 'Diâmetro'
         this.medidas[1].visivel = false
-        this.formula = '3,14 x (Diâmetro x Diâmetro) / 4'
+        this.medidas[1].valor = 0
+        this.formula = '3,14 x Diâmetro x Diâmetro / 4'
       }
       else if (this.secao === 'Retangular') {
         this.medidas[0].dimensao = 'Altura'
@@ -139,11 +157,10 @@ export default {
       }
       else if (this.secao === 'Sextavado') {
         this.medidas[0].dimensao = 'Altura'
-        this.medidas[1].dimensao = 'Largura'
-        this.medidas[1].visivel = true
-        this.formula = 'Altura x '
+        this.medidas[1].visivel = false
+        this.medidas[1].valor = 0
+        this.formula = 'Altura x Altura * Raiz_quadrada(3) / 2'
       }
-      
     },
   },
   filters: {
@@ -151,7 +168,7 @@ export default {
       return 'R$ ' + value.toLocaleString('pt-br')
     },
     virgula: value => {
-      return value !== null ? value.replace('.', ',') : '0,00'
+      return typeof(value) === 'string' ? value : '0,00'
     },
   },
 };
