@@ -63,7 +63,7 @@ export default {
   name: 'CalculoPeca',
   components: { Medida },
   data: () => ({
-    polegada: 2.54,
+    polegada: 25.4,
     pi: 3.14,
     perfis: ['Barra', 'Tubo'],
     perfil: '',
@@ -77,7 +77,7 @@ export default {
     ],
     espessura: false,
     materiais: [
-      { id: 0, metal: 'Alumínio', massa_especifica: 2.7 },
+      { id: 0, metal: 'Alumínio', massa_especifica: 2.71 },
       { id: 1, metal: 'Cobre', massa_especifica: 8.9 },
       { id: 2, metal: 'Ferro', massa_especifica: 8 },
       { id: 3, metal: 'Latão', massa_especifica: 8.4 },
@@ -90,36 +90,44 @@ export default {
   computed: {
     area() {
       let arr_un = []
-      this.medidas.map(m => {
-        if (m.unidade === 'cm') arr_un.push(1)
-        else if (m.unidade === 'mm') arr_un.push(0.1)
-        else if (m.unidade === 'pol') arr_un.push(2.54)
-        else arr_un.push(0)
-      })
+      let arr_valor = []
       let calculada = 0
-      if (this.perfil === '') {
-        return '0.00'
-      }
+      if (this.perfil === '') return '0.00'
+      this.medidas.map(m => {
+        if (m.unidade === 'cm') {
+          arr_un.push(1)
+          arr_valor.push(parseFloat(m.valor))
+        }
+        else if (m.unidade === 'mm') {
+          arr_un.push(0.1)
+          arr_valor.push(parseFloat(m.valor))
+        }
+        else if (m.unidade === 'pol') {
+          arr_un.push(1)
+          if (m.valor) arr_valor.push(parseFloat(m.valor.endsWith('mm') ? m.valor.split(' ')[1] : m.valor))
+        }
+      })
       if (this.secao === 'Quadrado') {
         calculada = this.espessura ?
-          (4 * this.medidas[2].valor * arr_un[2] * (this.medidas[0].valor * arr_un[0] - this.medidas[2].valor * arr_un[2]))
-          : (this.medidas[0].valor * arr_un[0]) ** 2
+          (4 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
+          : (arr_valor[0] * arr_un[0]) ** 2
       }
       else if (this.secao === 'Redondo') {
         calculada = this.espessura ?
-          (this.pi * this.medidas[2].valor * arr_un[2] * (this.medidas[0].valor * arr_un[0] - this.medidas[2].valor * arr_un[2]))
-          : (this.pi * (this.medidas[0].valor * arr_un[0]) ** 2) / 4
+          (this.pi * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
+          : (this.pi * (arr_valor[0] * arr_un[0]) ** 2) / 4
       }
       else if (this.secao === 'Retangular') {
         calculada = this.espessura ?
-          (2 * this.medidas[2].valor * arr_un[2] * (parseInt(this.medidas[0].valor) * arr_un[0] + parseInt(this.medidas[1].valor) * arr_un[1] - 2 * this.medidas[2].valor * arr_un[2]))
-          : this.medidas[0].valor * arr_un[0] * this.medidas[1].valor * arr_un[1]
+          (2 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - 2 * arr_valor[2] * arr_un[2]))
+          : arr_valor[0] * arr_un[0] * arr_valor[1] * arr_un[1]
       }
       else if (this.secao === 'Sextavado') {
         calculada = this.espessura ?
-          (2 * 3 ** 0.5 * this.medidas[2].valor * arr_un[2] * (this.medidas[0].valor * arr_un[0] - this.medidas[2].valor * arr_un[2]))
-          : (3 ** 0.5) * ((this.medidas[0].valor * arr_un[0]) ** 2) / 2
+          (2 * 3 ** 0.5 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
+          : (3 ** 0.5) * ((arr_valor[0] * arr_un[0]) ** 2) / 2
       }
+      calculada = Number.isNaN(calculada) ? 0 : calculada
       return (calculada).toFixed(2)
     },
     volume() {
