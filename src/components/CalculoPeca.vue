@@ -126,7 +126,7 @@ export default {
       return (this.area * this.comprimento * 100).toFixed(2)
     },
     peso_por_peca() {
-      let massa = this.material.split(' ').slice(-1)
+      let massa = this.material.split(' ').slice(-1) / 1000
       return (this.volume * massa).toFixed(2)
     },
     preco_por_peca() {
