@@ -3,7 +3,7 @@
     <v-card class="mx-2 my-2" tile elevation=5>
       <v-row class="px-4 pt-5 d-flex justify-space-between align-center">
         <v-col>
-          <v-select :items="materiais" label="Material" outlined color="blue darken-4">
+          <v-select v-model="material" :items="materiais.map(m => `${m.metal}: peso específico = ${m.massa_especifica}`)" label="Material" outlined color="blue darken-4">
           </v-select>
         </v-col>
         <v-col>
@@ -42,9 +42,6 @@
             VOLUME = {{ volume | virgula }} cm³
           </div>
           <div class="px-4 pt-5 font-weight-black">
-            PESO ESPECÍFICO = {{ peso_especifico | virgula }} kg / m³
-          </div>
-          <div class="px-4 pt-5 font-weight-black">
             PESO POR PEÇA = {{ peso_por_peca | virgula }} kg
           </div>
           <div class="px-4 pt-5 font-weight-black">
@@ -73,15 +70,20 @@ export default {
     secoes: ['Quadrado', 'Redondo', 'Retangular', 'Sextavado'],
     secao: '',
     formula: '',
-    materiais: ['Alumínio', 'Cobre', 'Latão', 'Ferro'],
     medidas: [
       { id: 0, dimensao: 'Altura', unidade: null, valor: null, visivel: true },
       { id: 1, dimensao: 'Largura', unidade: null, valor: null, visivel: true },
       { id: 2, dimensao: 'Espessura', unidade: null, valor: null, visivel: true },
     ],
     espessura: false,
+    materiais: [
+      { id: 0, metal: 'Alumínio', massa_especifica: 2.7 },
+      { id: 1, metal: 'Cobre', massa_especifica: 8.9 },
+      { id: 2, metal: 'Ferro', massa_especifica: 8 },
+      { id: 3, metal: 'Latão', massa_especifica: 8.4 },
+    ],
+    material: '',
     comprimento: null,
-    peso_especifico: null,
     valor_kg: null,
     quantidade: null,
   }),
@@ -117,7 +119,8 @@ export default {
       return (this.area * this.comprimento * 100).toFixed(2)
     },
     peso_por_peca() {
-      return (this.volume * this.peso_especifico).toFixed(2)
+      let massa = this.material.split(' ').slice(-1)
+      return (this.volume * massa).toFixed(2)
     },
     preco_por_peca() {
       return (this.peso_por_peca * this.valor_kg).toFixed(2)
@@ -168,7 +171,7 @@ export default {
       return 'R$ ' + value.toLocaleString('pt-br')
     },
     virgula: value => {
-      return typeof(value) === 'string' ? value : '0,00'
+      return typeof(value) === 'string' ? value.replace('.', ',') : '0,00'
     },
   },
 };
