@@ -1,17 +1,19 @@
 <template>
-  <v-row v-show="medida.visivel">
-    <v-col cols="4">
-      <v-select v-model="medida.unidade" :items="unidades" label="Unid." @change="mudanca_unid()" outlined color="blue darken-4">
-      </v-select>
-    </v-col>
-    <v-col v-if="metro" cols="8">
-      <v-text-field v-model="medida.valor" type="number" :label="medida.dimensao" outlined color="blue darken-4"/>
-    </v-col>
-    <v-col v-else cols="8">
-      <v-select v-model="medida.valor" :items="arr_pol.map(f => `${f.frac_str}: ${f.frac_mm} mm`)" :label="medida.dimensao" outlined color="blue darken-4">
-      </v-select>
-    </v-col>
-  </v-row>
+  <transition name="slide-fade">
+    <v-row v-show="medida.visivel">
+      <v-col cols="4">
+        <v-select v-model="medida.unidade" :items="unidades" label="Unid." @change="mudanca_unid()" outlined color="blue darken-4">
+        </v-select>
+      </v-col>
+      <v-col v-if="metro" cols="8">
+        <v-text-field v-model="medida.valor" type="number" :label="medida.dimensao" outlined color="blue darken-4"/>
+      </v-col>
+      <v-col v-else cols="8">
+        <v-select v-model="medida.valor" :items="arr_pol.map(f => `${f.frac_str}: ${f.frac_mm} mm`)" :label="medida.dimensao" outlined color="blue darken-4">
+        </v-select>
+      </v-col>
+    </v-row>
+  </transition>
 </template>
 
 <script>
@@ -60,5 +62,14 @@ export default {
 </script>
 
 <style>
-  
+.slide-fade-enter-active {
+  transition: all 1.2s ease;
+}
+.slide-fade-leave-active {
+  transition: all 1.2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
 </style>
