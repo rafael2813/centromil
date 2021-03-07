@@ -3,16 +3,11 @@
     <v-card class="mx-2 my-2" tile elevation=5>
       <v-row class="px-4 pt-5 d-flex justify-space-between align-center">
         <v-col cols="4">
-          <v-select v-model="material" :items="materiais.map(m => `${m.metal}: peso específico = ${m.massa_especifica}`)" label="Material" outlined color="blue darken-4">
+          <v-select v-model="material" :items="materiais.map(m => `${m.metal}: peso específico = ${m.massa_especifica}`)" @change="preco_por()" label="Material" outlined color="blue darken-4">
           </v-select>
         </v-col>
-        <v-col cols="4">
-          <v-select v-model="perfil" :items="perfis" @change="perfil_tubo()" label="Perfil" outlined color="blue darken-4">
-          </v-select>
-        </v-col>
-        <v-col cols="4">
-          <v-select v-model="secao" :items="secoes" @change="secao_transversal()" label="Seção Transversal" outlined color="blue darken-4">
-          </v-select>
+        <v-col>
+          <Perfil :geometria='geometria' :medidas=medidas />
         </v-col>
       </v-row>
       <v-row class="px-4 d-flex justify-space-between align-center" >
@@ -37,7 +32,7 @@
       </v-row>
       <v-divider></v-divider>
           <div class="px-4 pt-5 font-weight-black">
-            FÓRMULA DO CÁLCULO DA SEÇÃO TRANSVERSAL = {{ formula }}
+            FÓRMULA DO CÁLCULO DA SEÇÃO TRANSVERSAL = {{ geometria.formula }}
           </div>
           <div class="px-4 pt-5 font-weight-black">
             ÁREA DA SEÇÃO TRANSVERSAL = {{ area | virgula }} cm²
@@ -65,24 +60,20 @@
 </template>
 
 <script>
+import Perfil from './Perfil'
 import Medida from './Medida'
 export default {
   name: 'CalculoPeca',
-  components: { Medida },
+  components: { Perfil, Medida },
   data: () => ({
-    polegada: 25.4,
     pi: 3.14,
-    perfis: ['Barra', 'Tubo'],
-    perfil: '',
-    secoes: ['Quadrado', 'Redondo', 'Retangular', 'Sextavado'],
-    secao: '',
+    geometria: { 'perfil': null, 'secao': null, 'espessura': false, 'formula': '' },
     formula: '',
     medidas: [
       { id: 0, dimensao: 'Altura', unidade: null, valor: null, visivel: true },
       { id: 1, dimensao: 'Largura', unidade: null, valor: null, visivel: true },
       { id: 2, dimensao: 'Espessura', unidade: null, valor: null, visivel: true },
     ],
-    espessura: false,
     materiais: [
       { id: 0, metal: 'Alumínio', massa_especifica: 2.71 },
       { id: 1, metal: 'Cobre', massa_especifica: 8.9 },
@@ -105,7 +96,7 @@ export default {
       let arr_un = []
       let arr_valor = []
       let calculada = 0
-      if (this.perfil === '') return '0.00'
+      if (this.geometria.perfil === '') return '0.00'
       this.medidas.map(m => {
         if (m.unidade === 'cm') {
           arr_un.push(1)
@@ -119,26 +110,36 @@ export default {
           arr_un.push(1)
           if (m.valor) arr_valor.push(parseFloat(m.valor.endsWith('mm') ? m.valor.split(' ')[1] : m.valor))
         }
+        else {
+          arr_un.push(1)
+          arr_valor.push(0)
+        }
       })
-      if (this.secao === 'Quadrado') {
-        calculada = this.espessura
+      if (this.geometria.secao === 'Quadrado') {
+        calculada = this.geometria.espessura
           ? (4 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
           : (arr_valor[0] * arr_un[0]) ** 2
       }
-      else if (this.secao === 'Redondo') {
-        calculada = this.espessura
+      else if (this.geometria.secao === 'Redondo') {
+        calculada = this.geometria.espessura
           ? (this.pi * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
           : (this.pi * (arr_valor[0] * arr_un[0]) ** 2) / 4
       }
-      else if (this.secao === 'Retangular') {
-        calculada = this.espessura
+      else if (this.geometria.secao === 'Retangular') {
+        calculada = this.geometria.espessura
           ? (2 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - 2 * arr_valor[2] * arr_un[2]))
           : arr_valor[0] * arr_un[0] * arr_valor[1] * arr_un[1]
       }
-      else if (this.secao === 'Sextavado') {
-        calculada = this.espessura
+      else if (this.geometria.secao === 'Sextavado') {
+        calculada = this.geometria.espessura
           ? (2 * 3 ** 0.5 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
           : (3 ** 0.5) * ((arr_valor[0] * arr_un[0]) ** 2) / 2
+      }
+      else if (this.geometria.secao === 'U') {
+        calculada = arr_valor[2] * arr_un[2] * (2 * arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - 2 * arr_valor[2] * arr_un[2])
+      }
+      else if (['L', 'T'].includes(this.geometria.secao)) {
+        calculada = arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - arr_valor[2] * arr_un[2])
       }
       calculada = Number.isNaN(calculada) ? 0 : calculada
       return (calculada).toFixed(2)
@@ -162,38 +163,6 @@ export default {
     },
   },
   methods: {
-    perfil_tubo() {
-      let vazio = this.perfil === 'Tubo'
-      this.medidas[2].visivel = vazio
-      this.medidas[2].valor = vazio ? this.medidas[2].valor : 0
-      this.espessura = vazio
-    },
-    secao_transversal() {
-      if (this.secao === 'Quadrado') {
-        this.medidas[0].dimensao = 'Lado'
-        this.medidas[1].visivel = false
-        this.medidas[1].valor = 0
-        this.formula = 'Lado x Lado'
-      }
-      else if (this.secao === 'Redondo') {
-        this.medidas[0].dimensao = 'Diâmetro'
-        this.medidas[1].visivel = false
-        this.medidas[1].valor = 0
-        this.formula = '3,14 x Diâmetro x Diâmetro / 4'
-      }
-      else if (this.secao === 'Retangular') {
-        this.medidas[0].dimensao = 'Altura'
-        this.medidas[1].dimensao = 'Largura'
-        this.medidas[1].visivel = true
-        this.formula = 'Altura x Largura'
-      }
-      else if (this.secao === 'Sextavado') {
-        this.medidas[0].dimensao = 'Altura'
-        this.medidas[1].visivel = false
-        this.medidas[1].valor = 0
-        this.formula = 'Altura x Altura * Raiz_quadrada(3) / 2'
-      }
-    },
     preco_por() {
       if (this.preco[0].unidade === 'Quilo') this.valor_kg = this.preco[0].valor
       else if (this.preco[0].unidade === 'Metro') this.valor_kg = this.preco[0].valor / this.peso_por_metro
