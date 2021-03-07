@@ -2,15 +2,15 @@
   <v-container px-0 fluid>
     <v-card class="mx-2 my-2" tile elevation=5>
       <v-row class="px-4 pt-5 d-flex justify-space-between align-center">
-        <v-col>
+        <v-col cols="4">
           <v-select v-model="material" :items="materiais.map(m => `${m.metal}: peso específico = ${m.massa_especifica}`)" label="Material" outlined color="blue darken-4">
           </v-select>
         </v-col>
-        <v-col>
+        <v-col cols="4">
           <v-select v-model="perfil" :items="perfis" @change="perfil_tubo()" label="Perfil" outlined color="blue darken-4">
           </v-select>
         </v-col>
-        <v-col>
+        <v-col cols="4">
           <v-select v-model="secao" :items="secoes" @change="secao_transversal()" label="Seção Transversal" outlined color="blue darken-4">
           </v-select>
         </v-col>
@@ -21,13 +21,17 @@
         </v-col>
       </v-row>
       <v-row class="px-4 d-flex justify-space-between align-center">
-        <v-col>
-          <v-text-field v-model="comprimento" type="number" label="Comprimento (metros)" outlined color="blue darken-4"/>
+        <v-col cols="2">
+          <v-select v-model="preco[0].unidade" :items="precos" @change="preco_por()" label="Preço por" outlined color="blue darken-4">
+          </v-select>
         </v-col>
-        <v-col>
-          <v-text-field v-model="valor_kg" type="number" label="Preço por Quilo (R$ / kg)" outlined color="blue darken-4"/>
+        <v-col cols="2">
+          <v-text-field v-model="preco[0].valor" type="number" @keyup="preco_por()" :label="`R$ / ${preco[0].unidade}`" outlined color="blue darken-4"/>
         </v-col>
-        <v-col>
+        <v-col cols="4">
+          <v-text-field v-model="comprimento" type="number" @keyup="preco_por()" label="Comprimento (metros)" outlined color="blue darken-4"/>
+        </v-col>
+        <v-col cols="4">
           <v-text-field v-model="quantidade" type="number" label="Quantidade de Peças" outlined color="blue darken-4"/>
         </v-col>
       </v-row>
@@ -36,16 +40,19 @@
             FÓRMULA DO CÁLCULO DA SEÇÃO TRANSVERSAL = {{ formula }}
           </div>
           <div class="px-4 pt-5 font-weight-black">
-            ÁREA SEÇÃO TRANSVERSAL = {{ area | virgula }} cm²
+            ÁREA DA SEÇÃO TRANSVERSAL = {{ area | virgula }} cm²
           </div>
           <div class="px-4 pt-5 font-weight-black">
-            VOLUME = {{ volume | virgula }} cm³
+            PESO POR METRO LINEAR = {{ peso_por_metro | virgula }} kg / m
           </div>
           <div class="px-4 pt-5 font-weight-black">
             PESO POR PEÇA = {{ peso_por_peca | virgula }} kg
           </div>
           <div class="px-4 pt-5 font-weight-black">
-            PREÇO POR PEÇA = {{ preco_por_peca | moeda | virgula }}
+            PREÇO POR {{ preco[1].unidade.toUpperCase() }} = {{ preco[1].valor | moeda | virgula }}
+          </div>
+          <div class="px-4 pt-5 font-weight-black">
+            PREÇO POR {{ preco[2].unidade.toUpperCase() }} = {{ preco[2].valor | moeda | virgula }}
           </div>
           <div class="px-4 pt-5 font-weight-black">
             PESO TOTAL = {{ peso_total | virgula }} kg
@@ -83,6 +90,12 @@ export default {
       { id: 3, metal: 'Latão', massa_especifica: 8.4 },
     ],
     material: '',
+    precos: ['Quilo', 'Metro', 'Peça'],
+    preco: [
+      { 'valor': '', 'unidade': '' },
+      { 'valor': '', 'unidade': '' },
+      { 'valor': '', 'unidade': '' },
+    ],
     comprimento: null,
     valor_kg: null,
     quantidade: null,
@@ -108,23 +121,23 @@ export default {
         }
       })
       if (this.secao === 'Quadrado') {
-        calculada = this.espessura ?
-          (4 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
+        calculada = this.espessura
+          ? (4 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
           : (arr_valor[0] * arr_un[0]) ** 2
       }
       else if (this.secao === 'Redondo') {
-        calculada = this.espessura ?
-          (this.pi * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
+        calculada = this.espessura
+          ? (this.pi * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
           : (this.pi * (arr_valor[0] * arr_un[0]) ** 2) / 4
       }
       else if (this.secao === 'Retangular') {
-        calculada = this.espessura ?
-          (2 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - 2 * arr_valor[2] * arr_un[2]))
+        calculada = this.espessura
+          ? (2 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - 2 * arr_valor[2] * arr_un[2]))
           : arr_valor[0] * arr_un[0] * arr_valor[1] * arr_un[1]
       }
       else if (this.secao === 'Sextavado') {
-        calculada = this.espessura ?
-          (2 * 3 ** 0.5 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
+        calculada = this.espessura
+          ? (2 * 3 ** 0.5 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
           : (3 ** 0.5) * ((arr_valor[0] * arr_un[0]) ** 2) / 2
       }
       calculada = Number.isNaN(calculada) ? 0 : calculada
@@ -133,12 +146,13 @@ export default {
     volume() {
       return (this.area * this.comprimento * 100).toFixed(2)
     },
+    peso_por_metro() {
+      let massa = this.material.split(' ').slice(-1) / 1000
+      return (this.area * 100 * massa).toFixed(2)
+    },
     peso_por_peca() {
       let massa = this.material.split(' ').slice(-1) / 1000
       return (this.volume * massa).toFixed(2)
-    },
-    preco_por_peca() {
-      return (this.peso_por_peca * this.valor_kg).toFixed(2)
     },
     peso_total() {
       return (this.peso_por_peca * this.quantidade).toFixed(2)
@@ -179,6 +193,19 @@ export default {
         this.medidas[1].valor = 0
         this.formula = 'Altura x Altura * Raiz_quadrada(3) / 2'
       }
+    },
+    preco_por() {
+      if (this.preco[0].unidade === 'Quilo') this.valor_kg = this.preco[0].valor
+      else if (this.preco[0].unidade === 'Metro') this.valor_kg = this.preco[0].valor / this.peso_por_metro
+      else this.valor_kg = this.preco[0].valor / this.peso_por_peca
+      this.preco[1].unidade = (this.preco[0].unidade === 'Quilo') ? 'Metro' : 'Quilo'
+      this.preco[2].unidade = (this.preco[0].unidade === 'Peça') ? 'Metro' : 'Peça'
+      this.preco[1].valor = (this.preco[0].unidade === 'Quilo')
+        ? (this.preco[0].valor * this.peso_por_metro).toFixed(2)
+        : (this.preco[0].valor / this.peso_por_metro).toFixed(2)
+      this.preco[2].valor = (this.preco[0].unidade === 'Peça')
+        ? (this.preco[0].valor * this.peso_por_metro).toFixed(2)
+        : (this.preco[0].valor * this.comprimento).toFixed(2)
     },
   },
   filters: {
