@@ -1,7 +1,7 @@
 <template>
   <v-container px-0 fluid>
-    <v-card class="mx-2 my-2" tile elevation=5>
-      <v-row class="px-4 pt-5 d-flex justify-space-between align-center">
+    <v-card class="mx-2 my-2" tile elevation=10>
+      <v-row class="px-4 pt-4 d-flex justify-space-between align-center">
         <v-col cols="4">
           <v-select v-model="material"
             :items="materiais.map(
@@ -45,25 +45,25 @@
           <div class="px-4 pt-5 font-weight-black">
             FÓRMULA DO CÁLCULO DA SEÇÃO TRANSVERSAL = {{ geometria.formula }}
           </div>
-          <div class="px-4 pt-5 font-weight-black">
+          <div class="px-4 pt-3 font-weight-black">
             ÁREA DA SEÇÃO TRANSVERSAL = {{ area | virgula }} cm²
           </div>
-          <div class="px-4 pt-5 font-weight-black">
+          <div class="px-4 pt-3 font-weight-black">
             PESO POR METRO LINEAR = {{ peso_por_metro | virgula }} kg / m
           </div>
-          <div class="px-4 pt-5 font-weight-black">
+          <div class="px-4 pt-3 font-weight-black">
             PESO POR PEÇA = {{ peso_por_peca | virgula }} kg
           </div>
-          <div class="px-4 pt-5 font-weight-black">
+          <div class="px-4 pt-3 font-weight-black">
             PREÇO POR {{ preco[1].unidade.toUpperCase() }} = {{ preco[1].valor | moeda | virgula }}
           </div>
-          <div class="px-4 pt-5 font-weight-black">
+          <div class="px-4 pt-3 font-weight-black">
             PREÇO POR {{ preco[2].unidade.toUpperCase() }} = {{ preco[2].valor | moeda | virgula }}
           </div>
-          <div class="px-4 pt-5 font-weight-black">
+          <div class="px-4 pt-3 font-weight-black">
             PESO TOTAL = {{ peso_total | virgula }} kg
           </div>
-          <div class="px-4 py-5 font-weight-black">
+          <div class="px-4 py-4 font-weight-black">
             VALOR TOTAL = {{ valor_total | moeda | virgula }}
           </div>
     </v-card>
@@ -79,7 +79,6 @@ export default {
   name: 'CalculoPeca',
   components: { Perfil, Medida },
   data: () => ({
-    //pi: 3.14,
     geometria: { 'perfil': null, 'secao': null, 'espessura': false, 'formula': '' },
     formula: '',
     medidas: [
