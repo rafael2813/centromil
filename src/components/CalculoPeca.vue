@@ -3,7 +3,11 @@
     <v-card class="mx-2 my-2" tile elevation=5>
       <v-row class="px-4 pt-5 d-flex justify-space-between align-center">
         <v-col cols="4">
-          <v-select v-model="material" :items="materiais.map(m => `${m.metal}: peso específico = ${m.massa_especifica}`)" @change="preco_por()" label="Material" outlined color="blue darken-4">
+          <v-select v-model="material"
+            :items="materiais.map(
+              m => `${m.metal}: peso específico = ${m.massa_especifica}`)"
+            @change="preco_por()" label="Material" outlined
+            color="blue darken-4">
           </v-select>
         </v-col>
         <v-col>
@@ -17,17 +21,24 @@
       </v-row>
       <v-row class="px-4 d-flex justify-space-between align-center">
         <v-col cols="2">
-          <v-select v-model="preco[0].unidade" :items="precos" @change="preco_por()" label="Preço por" outlined color="blue darken-4">
+          <v-select v-model="preco[0].unidade" :items="precos"
+            @change="preco_por()" label="Preço por" outlined
+            color="blue darken-4">
           </v-select>
         </v-col>
         <v-col cols="2">
-          <v-text-field v-model="preco[0].valor" type="number" @keyup="preco_por()" :label="`R$ / ${preco[0].unidade}`" outlined color="blue darken-4"/>
+          <v-text-field v-model="preco[0].valor" type="number"
+            @keyup="preco_por()" :label="`R$ / ${preco[0].unidade}`"
+            outlined color="blue darken-4"/>
         </v-col>
         <v-col cols="4">
-          <v-text-field v-model="comprimento" type="number" @keyup="preco_por()" label="Comprimento (metros)" outlined color="blue darken-4"/>
+          <v-text-field v-model="comprimento" type="number"
+            @keyup="preco_por()" label="Comprimento (metros)" outlined
+            color="blue darken-4"/>
         </v-col>
         <v-col cols="4">
-          <v-text-field v-model="quantidade" type="number" label="Quantidade de Peças" outlined color="blue darken-4"/>
+          <v-text-field v-model="quantidade" type="number"
+            label="Quantidade de Peças" outlined color="blue darken-4"/>
         </v-col>
       </v-row>
       <v-divider></v-divider>
@@ -62,11 +73,13 @@
 <script>
 import Perfil from './Perfil'
 import Medida from './Medida'
+import funcoes_area from '@/functions/funcoes_area'
+
 export default {
   name: 'CalculoPeca',
   components: { Perfil, Medida },
   data: () => ({
-    pi: 3.14,
+    //pi: 3.14,
     geometria: { 'perfil': null, 'secao': null, 'espessura': false, 'formula': '' },
     formula: '',
     medidas: [
@@ -93,56 +106,8 @@ export default {
   }),
   computed: {
     area() {
-      let arr_un = []
-      let arr_valor = []
-      let calculada = 0
-      if (this.geometria.perfil === '') return '0.00'
-      this.medidas.map(m => {
-        if (m.unidade === 'cm') {
-          arr_un.push(1)
-          arr_valor.push(parseFloat(m.valor))
-        }
-        else if (m.unidade === 'mm') {
-          arr_un.push(0.1)
-          arr_valor.push(parseFloat(m.valor))
-        }
-        else if (m.unidade === 'pol') {
-          arr_un.push(1)
-          if (m.valor) arr_valor.push(parseFloat(m.valor.endsWith('mm') ? m.valor.split(' ')[1] : m.valor))
-        }
-        else {
-          arr_un.push(1)
-          arr_valor.push(0)
-        }
-      })
-      if (this.geometria.secao === 'Quadrado') {
-        calculada = this.geometria.espessura
-          ? (4 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
-          : (arr_valor[0] * arr_un[0]) ** 2
-      }
-      else if (this.geometria.secao === 'Redondo') {
-        calculada = this.geometria.espessura
-          ? (this.pi * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
-          : (this.pi * (arr_valor[0] * arr_un[0]) ** 2) / 4
-      }
-      else if (this.geometria.secao === 'Retangular') {
-        calculada = this.geometria.espessura
-          ? (2 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - 2 * arr_valor[2] * arr_un[2]))
-          : arr_valor[0] * arr_un[0] * arr_valor[1] * arr_un[1]
-      }
-      else if (this.geometria.secao === 'Sextavado') {
-        calculada = this.geometria.espessura
-          ? (2 * 3 ** 0.5 * arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] - arr_valor[2] * arr_un[2]))
-          : (3 ** 0.5) * ((arr_valor[0] * arr_un[0]) ** 2) / 2
-      }
-      else if (this.geometria.secao === 'U') {
-        calculada = arr_valor[2] * arr_un[2] * (2 * arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - 2 * arr_valor[2] * arr_un[2])
-      }
-      else if (['L', 'T'].includes(this.geometria.secao)) {
-        calculada = arr_valor[2] * arr_un[2] * (arr_valor[0] * arr_un[0] + arr_valor[1] * arr_un[1] - arr_valor[2] * arr_un[2])
-      }
-      calculada = Number.isNaN(calculada) ? 0 : calculada
-      return (calculada).toFixed(2)
+      let arr_ajustes = funcoes_area.ajuste_valores(this.geometria.perfil, this.medidas)
+      return funcoes_area.area_calculada(this.geometria.secao, arr_ajustes, this.espessura)
     },
     volume() {
       return (this.area * this.comprimento * 100).toFixed(2)
@@ -164,9 +129,15 @@ export default {
   },
   methods: {
     preco_por() {
-      if (this.preco[0].unidade === 'Quilo') this.valor_kg = this.preco[0].valor
-      else if (this.preco[0].unidade === 'Metro') this.valor_kg = this.preco[0].valor / this.peso_por_metro
-      else this.valor_kg = this.preco[0].valor / this.peso_por_peca
+      if (this.preco[0].unidade === 'Quilo') {
+        this.valor_kg = this.preco[0].valor
+      }
+      else if (this.preco[0].unidade === 'Metro') {
+        this.valor_kg = this.preco[0].valor / this.peso_por_metro
+      }
+      else {
+        this.valor_kg = this.preco[0].valor / this.peso_por_peca
+      }
       this.preco[1].unidade = (this.preco[0].unidade === 'Quilo') ? 'Metro' : 'Quilo'
       this.preco[2].unidade = (this.preco[0].unidade === 'Peça') ? 'Metro' : 'Peça'
       this.preco[1].valor = (this.preco[0].unidade === 'Quilo')

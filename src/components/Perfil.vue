@@ -2,11 +2,15 @@
   <transition name="slide-fade">
     <v-row>
       <v-col cols="6">
-        <v-select v-model="geometria.perfil" :items="perfis" @change="tipo_perfil()" label="Perfil" outlined color="blue darken-4">
-          </v-select>
-        </v-col>
-        <v-col cols="6">
-        <v-select v-model="geometria.secao" :items="secoes" @change="secao_transversal()" label="Seção Transversal" outlined color="blue darken-4">
+        <v-select v-model="geometria.perfil" :items="perfis"
+          @change="tipo_perfil()" label="Perfil"
+          outlined color="blue darken-4">
+        </v-select>
+      </v-col>
+      <v-col cols="6">
+        <v-select v-model="geometria.secao" :items="secoes"
+          @change="secao_transversal()" label="Seção Transversal"
+          outlined color="blue darken-4">
         </v-select>
       </v-col>
     </v-row>
@@ -29,8 +33,10 @@ export default {
       this.medidas[2].visivel = !macico
       this.medidas[2].valor = !macico ? this.medidas[2].valor : 0
       this.geometria.espessura = !macico
-      if (this.geometria.perfil !== 'Perfil') this.secoes = ['Quadrado', 'Redondo', 'Retangular', 'Sextavado']
-      else this.secoes = ['L', 'T', 'U']
+      if (this.geometria.perfil !== 'Perfil') {
+        this.secoes = ['Quadrado', 'Redondo', 'Retangular', 'Sextavado']
+      }
+      else { this.secoes = ['L', 'T', 'U'] }
     },
     secao_transversal() {
       if (this.geometria.secao === 'Quadrado') {
@@ -61,8 +67,12 @@ export default {
         this.medidas[0].dimensao = 'Altura'
         this.medidas[1].dimensao = 'Largura'
         this.medidas[1].visivel = true
-        if (this.geometria.secao === 'U') this.geometria.formula = 'Espessura x (2 x Altura + Largura - 2 x Espessura )'
-        else this.geometria.formula = 'Espessura x (Altura + Largura - Espessura )'
+        if (this.geometria.secao === 'U') {
+          this.geometria.formula = 'Espessura x (2 x Altura + Largura - 2 x Espessura )'
+        }
+        else {
+          this.geometria.formula = 'Espessura x (Altura + Largura - Espessura )'
+        }
       }
     },
   },
