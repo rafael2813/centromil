@@ -43,7 +43,9 @@ export default {
         this.medidas[0].dimensao = 'Lado'
         this.medidas[1].visivel = false
         this.medidas[1].valor = 0
-        this.geometria.formula = 'Lado x Lado'
+        this.geometria.formula = this.geometria.espessura
+          ? 'Lado x Lado'
+          : '4 x Espessura x (Lado - Espessura)'
       }
       else if (this.geometria.secao === 'Redondo') {
         this.medidas[0].dimensao = 'Diâmetro'

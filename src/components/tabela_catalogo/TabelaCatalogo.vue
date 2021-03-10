@@ -1,17 +1,15 @@
 <template>
-  <v-container px-0 fluid>
+  <v-card px-0 fluid>
     <v-data-table
       :page="page"
-      :pageCount="numberOfPages"
       :headers="headers"
-      :items="passengers"
+      :items="items"
       :options.sync="options"
-      :server-items-length="totalPassengers"
       :loading="loading"
       class="elevation-1"
     >
     </v-data-table>
-  </v-container>
+  </v-card>
 </template>
 
 <script>
@@ -20,18 +18,15 @@ export default {
   name: "DatatableComponent",
   data() {
     return {
-      page: 0,
-      totalPassengers: 0,
-      numberOfPages: 0,
-      passengers: [],
+      page: 1,
+      //totalAirlines: 592,
+      numberOfPages: 1,
+      items: [],
       loading: true,
       options: {},
       headers: [
-        { text: "Passenger Name", value: "name" },
-        { text: "Number Of Trips", value: "trips" },
-        { text: "Airline", value: "airline[0].name" },
-        { text: "Logo", value: "logo" },
-        { text: "Website", value: "website" },
+        { text: "Name", value: "name" },
+        { text: "ID", value: "id" },
       ],
     }
   },
@@ -47,22 +42,19 @@ export default {
   methods: {
     //Reading data from API method. 
     readDataFromAPI() {
-      this.loading = true;
-      const { page, itemsPerPage } = this.options;
-      let pageNumber = page - 1;
+      this.loading = true
+      //const { page, itemsPerPage } = this.options
+      //let pageNumber = page
       axios
         .get(
-          "https://api.instantwebtools.net/v1/passenger?size=" +
-            itemsPerPage +
-            "&page=" +
-            pageNumber
+          "https://jsonplaceholder.typicode.com/comments"
         )
         .then((response) => {
           //Then injecting the result to datatable parameters.
           this.loading = false;
-          this.passengers = response.data.data;
-          this.totalPassengers = response.data.totalPassengers;
-          this.numberOfPages = response.data.totalPages;
+          this.items = response.data
+          //this.totalAirlines = response.data.totalAirlines
+          //this.numberOfPages = response.data.totalPages
         })
     },
   },

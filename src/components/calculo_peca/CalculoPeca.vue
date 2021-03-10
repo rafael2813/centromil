@@ -106,7 +106,7 @@ export default {
   computed: {
     area() {
       let arr_ajustes = funcoes_area.ajuste_valores(this.geometria.perfil, this.medidas)
-      return funcoes_area.area_calculada(this.geometria.secao, arr_ajustes, this.espessura)
+      return funcoes_area.area_calculada(this.geometria.secao, arr_ajustes, this.geometria.espessura)
     },
     volume() {
       return (this.area * this.comprimento * 100).toFixed(2)
