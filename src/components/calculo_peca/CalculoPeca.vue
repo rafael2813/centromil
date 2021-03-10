@@ -5,7 +5,7 @@
         <v-col cols="4">
           <v-select v-model="material"
             :items="materiais.map(
-              m => `${m.metal}: peso específico = ${m.massa_especifica}`)"
+              m => `${m.metal}:peso específico = ${m.massa_especifica}`)"
             @change="preco_por()" label="Material" outlined
             color="blue darken-4">
           </v-select>
@@ -87,7 +87,7 @@ export default {
       { id: 2, dimensao: 'Espessura', unidade: null, valor: null, visivel: true },
     ],
     materiais: [
-      { id: 0, metal: 'Alumínio', massa_especifica: 2.71 },
+      { id: 0, metal: 'Alumínio', massa_especifica: 2.8 /*2.71*/ },
       { id: 1, metal: 'Cobre', massa_especifica: 8.9 },
       { id: 2, metal: 'Ferro', massa_especifica: 8 },
       { id: 3, metal: 'Latão', massa_especifica: 8.4 },

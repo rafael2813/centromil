@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="6">
         <v-select v-model="geometria.perfil" :items="perfis"
-          @change="tipo_perfil()" label="Perfil"
+          @change="tipo_perfil(), secao_transversal()" label="Perfil"
           outlined color="blue darken-4">
         </v-select>
       </v-col>
@@ -44,26 +44,32 @@ export default {
         this.medidas[1].visivel = false
         this.medidas[1].valor = 0
         this.geometria.formula = this.geometria.espessura
-          ? 'Lado x Lado'
-          : '4 x Espessura x (Lado - Espessura)'
+          ? '4 x Espessura x (Lado - Espessura)'
+          : 'Lado x Lado'
       }
       else if (this.geometria.secao === 'Redondo') {
         this.medidas[0].dimensao = 'Diâmetro'
         this.medidas[1].visivel = false
         this.medidas[1].valor = 0
-        this.geometria.formula = '3,14 x Diâmetro x Diâmetro / 4'
+        this.geometria.formula = this.geometria.espessura
+        ? '3,14 x Espessura x (Diâmetro - Espessura)'
+        : '3,14 x Diâmetro x Diâmetro / 4'
       }
       else if (this.geometria.secao === 'Retangular') {
         this.medidas[0].dimensao = 'Altura'
         this.medidas[1].dimensao = 'Largura'
         this.medidas[1].visivel = true
-        this.geometria.formula = 'Altura x Largura'
+        this.geometria.formula = this.geometria.espessura
+        ? '(Altura - 2 x Espessura) x (Largura - 2 x Espessura)'
+        : 'Altura x Largura'
       }
       else if (this.geometria.secao === 'Sextavado') {
         this.medidas[0].dimensao = 'Altura'
         this.medidas[1].visivel = false
         this.medidas[1].valor = 0
-        this.geometria.formula = 'Altura x Altura x raiz_quadrada(3) / 2'
+        this.geometria.formula = this.geometria.espessura
+        ? 'Espessura x (Altura - Espessura) x raiz_quadrada(3) / 2'
+        : 'Altura x Altura x raiz_quadrada(3) / 2'
       }
       else if (this.geometria.perfil === 'Perfil') {
         this.medidas[0].dimensao = 'Altura'
