@@ -1,17 +1,17 @@
 <template>
   <transition name="slide-fade">
     <v-row v-show="medida.visivel">
-      <v-col cols="5">
+      <v-col cols="4">
         <v-select v-model="medida.unidade" :items="unidades"
           label="Unid." @change="mudanca_unid()" outlined
           color="blue darken-4">
         </v-select>
       </v-col>
-      <v-col v-if="metro" cols="7">
+      <v-col v-if="metro" cols="8">
         <v-text-field v-model="medida.valor" type="number"
           :label="medida.dimensao" outlined color="blue darken-4"/>
       </v-col>
-      <v-col v-else cols="7">
+      <v-col v-else cols="8">
         <v-select v-model="medida.valor"
           :items="arr_pol.map(f => `${f.frac_str}: ${f.frac_mm} mm`)"
           :label="medida.dimensao" outlined color="blue darken-4">

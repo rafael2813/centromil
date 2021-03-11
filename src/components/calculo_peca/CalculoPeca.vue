@@ -5,7 +5,7 @@
         <v-col cols="4">
           <v-select v-model="material"
             :items="materiais.map(
-              m => `${m.metal}:peso específico = ${m.massa_especifica}`)"
+              m => `${m.metal}: peso específico = ${m.massa_especifica}`)"
             @change="preco_por()" label="Material" outlined
             color="blue darken-4">
           </v-select>
@@ -21,7 +21,7 @@
       </v-row>
       <v-row class="px-4 d-flex justify-space-between align-center">
         <v-col cols="2">
-          <v-select v-model="preco[0].unidade" :items="precos"
+          <v-select v-model.number="preco[0].unidade" :items="precos"
             @change="preco_por()" label="Preço por" outlined
             color="blue darken-4">
           </v-select>
@@ -32,12 +32,12 @@
             outlined color="blue darken-4"/>
         </v-col>
         <v-col cols="4">
-          <v-text-field v-model="comprimento" type="number"
+          <v-text-field v-model.number="comprimento" type="number"
             @keyup="preco_por()" label="Comprimento (metros)" outlined
             color="blue darken-4"/>
         </v-col>
         <v-col cols="4">
-          <v-text-field v-model="quantidade" type="number"
+          <v-text-field v-model.number="quantidade" type="number"
             label="Quantidade de Peças" outlined color="blue darken-4"/>
         </v-col>
       </v-row>
@@ -162,5 +162,8 @@ export default {
 <style>
   .v-toolbar {
     max-height: 50px;
+  }
+  .v-input, .v-select {
+    font-size: 0.9rem;
   }
 </style>
