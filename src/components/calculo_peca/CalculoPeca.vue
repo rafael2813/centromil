@@ -140,11 +140,11 @@ export default {
       this.preco[1].unidade = (this.preco[0].unidade === 'Quilo') ? 'Metro' : 'Quilo'
       this.preco[2].unidade = (this.preco[0].unidade === 'Peça') ? 'Metro' : 'Peça'
       this.preco[1].valor = (this.preco[0].unidade === 'Quilo')
-        ? this.preco[0].valor * this.peso_por_metro
-        : this.preco[0].valor / this.peso_por_metro
+        ? this.valor_kg * this.peso_por_metro
+        : this.valor_kg
       this.preco[2].valor = (this.preco[0].unidade === 'Peça')
-        ? this.preco[0].valor * this.peso_por_metro
-        : this.preco[0].valor * this.peso_por_peca
+        ? this.valor_kg
+        : this.valor_kg * this.peso_por_peca
     },
   },
   filters: {
