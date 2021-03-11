@@ -23,7 +23,7 @@ export default {
   name: 'Medida',
   components: { },
   data: () => ({
-    perfis: ['Perfil', 'Tubo', 'Vergalhão'],
+    perfis: ['Chapa', 'Perfil', 'Tubo', 'Vergalhão'],
     secoes: [''],
   }),
   props: ['geometria', 'medidas'],
@@ -33,10 +33,15 @@ export default {
       this.medidas[2].visivel = !macico
       this.medidas[2].valor = !macico ? this.medidas[2].valor : 0
       this.geometria.espessura = !macico
-      if (this.geometria.perfil !== 'Perfil') {
+      if (['Tubo', 'Vergalhão'].includes(this.geometria.perfil)) {
         this.secoes = ['Quadrado', 'Redondo', 'Retangular', 'Sextavado']
       }
-      else { this.secoes = ['L', 'T', 'U'] }
+      else if (this.geometria.perfil === 'Perfil') {
+        this.secoes = ['L', 'T', 'U']
+      }
+      else if (this.geometria.perfil === 'Chapa') {
+        this.secoes = ['Chapa']
+      }
     },
     secao_transversal() {
       if (this.geometria.secao === 'Quadrado') {
@@ -75,12 +80,15 @@ export default {
         this.medidas[0].dimensao = 'Altura'
         this.medidas[1].dimensao = 'Largura'
         this.medidas[1].visivel = true
-        if (this.geometria.secao === 'U') {
-          this.geometria.formula = 'Espessura x (2 x Altura + Largura - 2 x Espessura )'
-        }
-        else {
-          this.geometria.formula = 'Espessura x (Altura + Largura - Espessura )'
-        }
+        this.geometria.formula = this.geometria.secao === 'U'
+          ? 'Espessura x (2 x Altura + Largura - 2 x Espessura )'
+          : 'Espessura x (Altura + Largura - Espessura )'
+      }
+      else if (this.geometria.perfil === 'Chapa') {
+        this.medidas[0].dimensao = 'Largura'
+        this.medidas[1].visivel = false
+        this.medidas[1].valor = 0
+        this.geometria.formula = 'Largura x Espessura'
       }
     },
   },

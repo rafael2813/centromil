@@ -27,7 +27,7 @@
           </v-select>
         </v-col>
         <v-col cols="2">
-          <v-text-field v-model="preco[0].valor" type="number"
+          <v-text-field v-model.number="preco[0].valor" type="number"
             @keyup="preco_por()" :label="`R$ / ${preco[0].unidade}`"
             outlined color="blue darken-4"/>
         </v-col>
@@ -55,16 +55,16 @@
             PESO POR PEÇA = {{ peso_por_peca | virgula }} kg
           </div>
           <div class="px-4 pt-3 font-weight-black">
-            PREÇO POR {{ preco[1].unidade.toUpperCase() }} = {{ preco[1].valor | moeda | virgula }}
+            PREÇO POR {{ preco[1].unidade.toUpperCase() }} = R$ {{ preco[1].valor | virgula }}
           </div>
           <div class="px-4 pt-3 font-weight-black">
-            PREÇO POR {{ preco[2].unidade.toUpperCase() }} = {{ preco[2].valor | moeda | virgula }}
+            PREÇO POR {{ preco[2].unidade.toUpperCase() }} = R$ {{ preco[2].valor | virgula }}
           </div>
           <div class="px-4 pt-3 font-weight-black">
             PESO TOTAL = {{ peso_total | virgula }} kg
           </div>
           <div class="px-4 py-4 font-weight-black">
-            VALOR TOTAL = {{ valor_total | moeda | virgula }}
+            VALOR TOTAL = R$ {{ valor_total | virgula }}
           </div>
     </v-card>
   </v-container>
@@ -109,50 +109,51 @@ export default {
       return funcoes_area.area_calculada(this.geometria.secao, arr_ajustes, this.geometria.espessura)
     },
     volume() {
-      return (this.area * this.comprimento * 100).toFixed(2)
+      return parseFloat((this.area * this.comprimento * 100).toFixed(2))
     },
     peso_por_metro() {
       let massa = this.material.split(' ').slice(-1) / 1000
-      return (this.area * 100 * massa).toFixed(2)
+      return parseFloat((this.area * 100 * massa).toFixed(2))
     },
     peso_por_peca() {
       let massa = this.material.split(' ').slice(-1) / 1000
-      return (this.volume * massa).toFixed(2)
+      return parseFloat((this.volume * massa).toFixed(2))
     },
     peso_total() {
-      return (this.peso_por_peca * this.quantidade).toFixed(2)
+      return parseFloat((this.peso_por_peca * this.quantidade).toFixed(2))
     },
     valor_total() {
-      return (this.valor_kg * this.peso_total).toFixed(2)
+      return parseFloat((this.valor_kg * this.peso_total).toFixed(2))
     },
   },
   methods: {
     preco_por() {
       if (this.preco[0].unidade === 'Quilo') {
-        this.valor_kg = this.preco[0].valor
+        this.valor_kg = parseFloat(this.preco[0].valor)
       }
       else if (this.preco[0].unidade === 'Metro') {
-        this.valor_kg = this.preco[0].valor / this.peso_por_metro
+        this.valor_kg = parseFloat(this.preco[0].valor) / parseFloat(this.peso_por_metro)
       }
       else {
-        this.valor_kg = this.preco[0].valor / this.peso_por_peca
+        this.valor_kg = parseFloat(this.preco[0].valor) / parseFloat(this.peso_por_peca)
       }
       this.preco[1].unidade = (this.preco[0].unidade === 'Quilo') ? 'Metro' : 'Quilo'
       this.preco[2].unidade = (this.preco[0].unidade === 'Peça') ? 'Metro' : 'Peça'
       this.preco[1].valor = (this.preco[0].unidade === 'Quilo')
-        ? (this.preco[0].valor * this.peso_por_metro).toFixed(2)
-        : (this.preco[0].valor / this.peso_por_metro).toFixed(2)
+        ? this.preco[0].valor * this.peso_por_metro
+        : this.preco[0].valor / this.peso_por_metro
       this.preco[2].valor = (this.preco[0].unidade === 'Peça')
-        ? (this.preco[0].valor * this.peso_por_metro).toFixed(2)
-        : (this.preco[0].valor * this.comprimento).toFixed(2)
+        ? this.preco[0].valor * this.peso_por_metro
+        : this.preco[0].valor * this.peso_por_peca
     },
   },
   filters: {
-    moeda: value => {
-      return 'R$ ' + value.toLocaleString('pt-br')
-    },
     virgula: value => {
-      return typeof(value) === 'string' ? value.replace('.', ',') : '0,00'
+      if (value) return value.toLocaleString('pt-br', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })
+      else return '0,00'
     },
   },
 };

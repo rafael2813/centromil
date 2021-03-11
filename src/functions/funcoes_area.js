@@ -10,8 +10,8 @@ function ajuste_valores(perfil, arr_medidas) {
         }
         else if (m.unidade === 'pol') {
             if (m.valor) {
-                arr_ajustes.push(parseFloat(m.valor.endsWith('mm')
-                    ? m.valor.split(' ')[1] : m.valor))
+                arr_ajustes.push(0.1 * (parseFloat(m.valor.endsWith('mm')
+                    ? m.valor.split(' ')[1] : m.valor)))
             }
         }
         else {
@@ -50,8 +50,11 @@ function area_calculada(secao, arr_valores, espessura) {
     else if (['L', 'T'].includes(secao)) {
       calculada = arr_valores[2] * (arr_valores[0] + arr_valores[1] - arr_valores[2])
     }
+    else if (secao === 'Chapa') {
+      calculada = arr_valores[0] * arr_valores[2]
+    }
     calculada = Number.isNaN(calculada) ? 0 : calculada
-    return (calculada).toFixed(2)
+    return parseFloat(calculada.toFixed(2))
 }
 
 export default { ajuste_valores, area_calculada }
