@@ -106,45 +106,42 @@ export default {
   computed: {
     area() {
       let arr_ajustes = funcoes_area.ajuste_valores(this.geometria.perfil, this.medidas)
-      return funcoes_area.area_calculada(this.geometria.secao, arr_ajustes, this.geometria.espessura)
+      return Math.ceil(funcoes_area.area_calculada(this.geometria.secao, arr_ajustes, this.geometria.espessura)*100) / 100
     },
     volume() {
-      return parseFloat((this.area * this.comprimento * 100).toFixed(2))
+      return Math.ceil(this.area * this.comprimento * 100 * 100) /100
     },
     peso_por_metro() {
       let massa = this.material.split(' ').slice(-1) / 1000
-      return parseFloat((this.area * 100 * massa).toFixed(2))
+      return Math.ceil(this.area * 100 * massa * 100) / 100
     },
     peso_por_peca() {
       let massa = this.material.split(' ').slice(-1) / 1000
-      return parseFloat((this.volume * massa).toFixed(2))
+      return Math.ceil(this.volume * massa * 100) / 100
     },
     peso_total() {
-      return parseFloat((this.peso_por_peca * this.quantidade).toFixed(2))
+      return Math.ceil(this.peso_por_peca * this.quantidade * 100) / 100
     },
     valor_total() {
-      return parseFloat((this.valor_kg * this.peso_total).toFixed(2))
+      console.log(this.peso_por_peca)
+      if (this.preco[0].unidade === 'Quilo') return Math.ceil(this.valor_kg * this.peso_total * 100) / 100
+      else if (this.preco[0].unidade === 'Metro') return Math.ceil(this.valor_kg * this.comprimento * 100) / 100
+      else return Math.ceil(this.valor_kg * this.peso_por_peca * 100) / 100
     },
   },
   methods: {
     preco_por() {
-      if (this.preco[0].unidade === 'Quilo') {
-        this.valor_kg = parseFloat(this.preco[0].valor)
-      }
-      else if (this.preco[0].unidade === 'Metro') {
-        this.valor_kg = parseFloat(this.preco[0].valor) / parseFloat(this.peso_por_metro)
-      }
-      else {
-        this.valor_kg = parseFloat(this.preco[0].valor) / parseFloat(this.peso_por_peca)
-      }
+      if (this.preco[0].unidade === 'Quilo') this.valor_kg = this.preco[0].valor
+      else if (this.preco[0].unidade === 'Metro') this.valor_kg = this.preco[0].valor / this.peso_por_metro
+      else this.valor_kg = this.preco[0].valor / this.peso_por_peca
       this.preco[1].unidade = (this.preco[0].unidade === 'Quilo') ? 'Metro' : 'Quilo'
       this.preco[2].unidade = (this.preco[0].unidade === 'Peça') ? 'Metro' : 'Peça'
       this.preco[1].valor = (this.preco[0].unidade === 'Quilo')
-        ? this.valor_kg * this.peso_por_metro
-        : this.valor_kg
+        ? Math.ceil(this.valor_kg * this.peso_por_metro * 100) / 100
+        : Math.ceil(this.valor_kg * 100) / 100
       this.preco[2].valor = (this.preco[0].unidade === 'Peça')
-        ? this.valor_kg
-        : this.valor_kg * this.peso_por_peca
+        ? Math.ceil(this.valor_kg * 100) / 100
+        : Math.ceil(this.valor_kg * this.peso_por_peca * 100) / 100
     },
   },
   filters: {
