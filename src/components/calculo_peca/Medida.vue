@@ -19,15 +19,11 @@
               color="blue darken-4">
             </v-select>
           </v-col>
-          <v-col class="pl-1 pr-0 ma-0">
+          <v-col class="px-1 ma-0">
             <v-select v-model="polnum" :items="arr_polnum"
               label="Numer." @change="conversao_polegada()" outlined
               color="blue darken-4">
             </v-select>
-          </v-col>
-          <v-col class="mx-n1 my-0" cols="1">
-            <span class="d-flex mt-1 justify-center align-center"
-              style="font-size:1.8rem;">/</span>
           </v-col>
           <v-col class="pl-0 ma-0">
             <v-select v-model="polden" :items="arr_polden"
