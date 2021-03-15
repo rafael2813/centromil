@@ -161,6 +161,6 @@ export default {
     max-height: 50px;
   }
   .v-input, .v-select {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 </style>

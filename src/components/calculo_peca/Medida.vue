@@ -1,40 +1,40 @@
 <template>
   <transition name="slide-fade">
     <v-row v-show="medida.visivel">
-      <v-col :cols="metro ? 4 : 3" class="px-1 mx-0">
+      <v-col :cols="metro ? 4 : 3" class="pl-1 pr-0 mx-0">
         <v-select v-model="medida.unidade" :items="unidades"
           label="Unidade" @change="mudanca_unidade()" outlined
           color="blue darken-4">
         </v-select>
       </v-col>
-      <v-col v-if="metro" cols="8" class="px-1 mx-0">
+      <v-col v-if="metro" cols="8" class="pr-1 mx-0">
         <v-text-field v-model="medida.valor" type="number"
           :label="medida.dimensao" outlined color="blue darken-4"/>
       </v-col>
-      <v-col v-else cols="9" class="px-1 mx-0">
+      <v-col v-else cols="9" class="pr-1 mx-0">
         <v-row>
-        <v-col class="pr-0 ma-0">
-          <v-select v-model="polint" :items="arr_polint"
-            label="Inteira" @change="conversao_polegada()" outlined
-            color="blue darken-4">
-          </v-select>
-        </v-col>
-        <v-col class="pl-1 pr-0 ma-0">
-        <v-select v-model="polnum" :items="arr_polnum"
-          label="Numer." @change="conversao_polegada()" outlined
-          color="blue darken-4">
-        </v-select>
-        </v-col>
-        <v-col cols="1">
-          <span class="d-flex justify-center align-center"
-            style="font-size:2rem;">/</span>
-        </v-col>
-        <v-col class="pl-0 ma-0">
-        <v-select v-model="polden" :items="arr_polden"
-          label="Denom." @change="carrega_numerador()" outlined
-          color="blue darken-4">
-        </v-select>
-        </v-col>
+          <v-col class="pr-0 ma-0">
+            <v-select v-model="polint" :items="arr_polint"
+              label="Inteira" @change="conversao_polegada()" outlined
+              color="blue darken-4">
+            </v-select>
+          </v-col>
+          <v-col class="pl-1 pr-0 ma-0">
+            <v-select v-model="polnum" :items="arr_polnum"
+              label="Numer." @change="conversao_polegada()" outlined
+              color="blue darken-4">
+            </v-select>
+          </v-col>
+          <v-col class="mx-n1 my-0" cols="1">
+            <span class="d-flex mt-1 justify-center align-center"
+              style="font-size:1.8rem;">/</span>
+          </v-col>
+          <v-col class="pl-0 ma-0">
+            <v-select v-model="polden" :items="arr_polden"
+              label="Denom." @change="carrega_numerador()" outlined
+              color="blue darken-4">
+            </v-select>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
