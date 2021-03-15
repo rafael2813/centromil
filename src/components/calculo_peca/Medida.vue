@@ -27,7 +27,7 @@
         </v-col>
         <v-col cols="1">
           <span class="d-flex justify-center align-center"
-            style="font-size:2.2rem;">/</span>
+            style="font-size:2rem;">/</span>
         </v-col>
         <v-col class="pl-0 ma-0">
         <v-select v-model="polden" :items="arr_polden"
