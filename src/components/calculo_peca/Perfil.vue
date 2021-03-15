@@ -87,7 +87,8 @@ export default {
           ? 'Espessura x (2 x Altura + Largura - 2 x Espessura )'
           : 'Espessura x (Altura + Largura - Espessura )'
       }
-      else if (this.geometria.perfil === 'Chapa') {
+      else if (this.geometria.perfil === 'Chapa' &&
+          this.geometria.secao === 'Chapa') {
         this.medidas[0].dimensao = 'Largura'
         this.medidas[1].visivel = false
         this.medidas[1].valor = 0
