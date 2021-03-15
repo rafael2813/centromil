@@ -1,26 +1,3 @@
-function ajuste_valores(perfil, arr_medidas) {
-    let arr_ajustes = []
-    if (perfil === '') return [0, 0, 0]
-    arr_medidas.map(m => {
-        if (m.unidade === 'cm') {
-            arr_ajustes.push(parseFloat(m.valor))
-        }
-        else if (m.unidade === 'mm') {
-            arr_ajustes.push(0.1 * parseFloat(m.valor))
-        }
-        else if (m.unidade === 'pol') {
-            if (m.valor) {
-                arr_ajustes.push(0.1 * (parseFloat(m.valor.endsWith('mm')
-                    ? m.valor.split(' ')[1] : m.valor)))
-            }
-        }
-        else {
-            arr_ajustes.push(0)
-        }
-    })
-    return arr_ajustes
-}
-
 function area_calculada(secao, arr_valores, espessura) {
     const pi = 3.14
     let calculada = 0
@@ -54,7 +31,7 @@ function area_calculada(secao, arr_valores, espessura) {
       calculada = arr_valores[0] * arr_valores[2]
     }
     calculada = Number.isNaN(calculada) ? 0 : calculada
-    return parseFloat(calculada.toFixed(2))
+    return parseFloat(calculada.toFixed(3))
 }
 
-export default { ajuste_valores, area_calculada }
+export default { area_calculada }

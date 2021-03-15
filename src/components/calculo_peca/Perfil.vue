@@ -1,13 +1,13 @@
 <template>
   <transition name="slide-fade">
     <v-row>
-      <v-col cols="6">
+      <v-col cols="6" class="px-1 mx-0">
         <v-select v-model="geometria.perfil" :items="perfis"
           @change="tipo_perfil(), secao_transversal()" label="Perfil"
           outlined color="blue darken-4">
         </v-select>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="6" class="px-1 mx-0">
         <v-select v-model="geometria.secao" :items="secoes"
           @change="secao_transversal()" label="Seção Transversal"
           outlined color="blue darken-4">
@@ -33,8 +33,11 @@ export default {
       this.medidas[2].visivel = !macico
       this.medidas[2].valor = !macico ? this.medidas[2].valor : 0
       this.geometria.espessura = !macico
-      if (['Tubo', 'Vergalhão'].includes(this.geometria.perfil)) {
+      if (this.geometria.perfil === 'Vergalhão') {
         this.secoes = ['Quadrado', 'Redondo', 'Retangular', 'Sextavado']
+      }
+      else if (this.geometria.perfil === 'Tubo') {
+        this.secoes = ['Quadrado', 'Redondo', 'Retangular']
       }
       else if (this.geometria.perfil === 'Perfil') {
         this.secoes = ['L', 'T', 'U']

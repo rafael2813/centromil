@@ -1,21 +1,41 @@
 <template>
   <transition name="slide-fade">
     <v-row v-show="medida.visivel">
-      <v-col cols="4">
+      <v-col :cols="metro ? 4 : 3" class="px-1 mx-0">
         <v-select v-model="medida.unidade" :items="unidades"
-          label="Unid." @change="mudanca_unid()" outlined
+          label="Unidade" @change="mudanca_unidade()" outlined
           color="blue darken-4">
         </v-select>
       </v-col>
-      <v-col v-if="metro" cols="8">
+      <v-col v-if="metro" cols="8" class="px-1 mx-0">
         <v-text-field v-model="medida.valor" type="number"
           :label="medida.dimensao" outlined color="blue darken-4"/>
       </v-col>
-      <v-col v-else cols="8">
-        <v-select v-model="medida.valor"
-          :items="arr_pol.map(f => `${f.frac_str}: ${f.frac_mm} mm`)"
-          :label="medida.dimensao" outlined color="blue darken-4">
+      <v-col v-else cols="9" class="px-1 mx-0">
+        <v-row>
+        <v-col class="pr-0 ma-0">
+          <v-select v-model="polint" :items="arr_polint"
+            label="Inteira" @change="conversao_polegada()" outlined
+            color="blue darken-4">
+          </v-select>
+        </v-col>
+        <v-col class="pl-1 pr-0 ma-0">
+        <v-select v-model="polnum" :items="arr_polnum"
+          label="Numer." @change="conversao_polegada()" outlined
+          color="blue darken-4">
         </v-select>
+        </v-col>
+        <v-col cols="1">
+          <span class="d-flex justify-center align-center"
+            style="font-size:2.2rem;">/</span>
+        </v-col>
+        <v-col class="pl-0 ma-0">
+        <v-select v-model="polden" :items="arr_polden"
+          label="Denom." @change="carrega_numerador()" outlined
+          color="blue darken-4">
+        </v-select>
+        </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </transition>
@@ -25,43 +45,35 @@
 
 export default {
   name: 'Medida',
-  components: { },
   data: () => ({
-    unidades: ['cm', 'mm', 'pol'],
+    unidades: ['mm', 'pol'],
     metro: true,
     pol: 25.4,
-    fracoes_str: [
-      '1/32', '1/16', '3/32', '1/8', '5/32',
-      '3/16', '7/32', '1/4', '9/32', '5/16',
-      '11/32', '3/8', '13/32', '7/16', '15/32',
-      '1/2', '17/32', '9/16', '19/32', '5/8',
-      '21/32', '11/16', '23/32', '3/4', '25/32',
-      '13/16', '27/32', '7/8', '29/32', '15/16',
-      '31/32', '1',
-    ],
-    fracao: 0,
-    arr_pol: [],
+    arr_polint: Array(21).fill().map((_, i) => i),
+    arr_polden: Array(6).fill().map((_, i) => 2 ** i),
+    arr_polnum: [0],
+    polint: 0,
+    polden: 1,
+    polnum: 0,
+    valor_mm: 0,
   }),
   props: ['medida'],
   methods: {
-    mudanca_unid() {
+    mudanca_unidade() {
       this.metro = this.medida.unidade !== 'pol'
       this.medida.valor = null
     },
-    conversao_fracoes() {
-      this.fracoes_str.map(f => {
-        let num = f.split('/')[0]
-        let den = f.split('/')[1] ? f.split('/')[1] : 1
-        this.arr_pol.push({
-          'frac_str': f,
-          'frac_num': num / den,
-          'frac_mm': (num / den * this.pol).toFixed(3),
-        })
-      })
+    carrega_numerador() {
+      this.arr_polnum = []
+      this.polnum = 0
+      this.arr_polnum.push(0)
+      this.arr_polnum.push(...Array(this.polden).fill()
+        .map((_, i) => (i * 2) + 1).filter(n => n < this.polden))
     },
-  },
-  created() {
-    this.conversao_fracoes()
+    conversao_polegada() {
+      this.medida.valor = this.pol * (this.polint + this.polnum / this.polden)
+      console.log(this.medida.valor)
+    },
   },
 };
 </script>
