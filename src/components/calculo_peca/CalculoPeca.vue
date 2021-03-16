@@ -1,6 +1,6 @@
 <template>
   <v-container px-0 fluid>
-    <v-card class="mx-1 my-2" tile elevation=10>
+    <v-card class="mx-1 my-3" tile elevation=10>
       <v-row class="px-4 pt-4 d-flex justify-space-between align-center">
         <v-col cols="4" class="px-1 mx-0">
           <v-select v-model="material"
@@ -158,10 +158,5 @@ export default {
 </script>
 
 <style>
-  .v-toolbar {
-    max-height: 50px;
-  }
-  .v-input, .v-select {
-    font-size: 0.8rem;
-  }
+  
 </style>
