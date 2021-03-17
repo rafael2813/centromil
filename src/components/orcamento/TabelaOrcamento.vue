@@ -6,11 +6,16 @@
       :items="items"
       item-key="id"
       class="elevation-1">
+      <template v-for="(h, index) in headers" v-slot:[`item.${h.value}`]="{ item }">
+        <div :key="index" class="align-center">
+          {{ virgula(item[h.value], h) }}
+        </div>
+      </template>
       <template slot="footer">
-          <tr class="red--text">
-              <th class="title">TOTAL: </th>
-              <th class="title">{{ valorTotal() }}</th>
-          </tr>
+        <v-row class="px-4 d-flex justify-space-between align-center" >
+          <v-col class="title">TOTAL:</v-col>
+          <v-col class="title red--text">{{ valorTotal() }}</v-col>
+        </v-row>
       </template>
     </v-data-table>
   </v-card>
@@ -88,28 +93,34 @@
         },
       ],
       headers: [
-        { text: 'Item', value: 'id', },
-        { text: 'Perfil', value: 'perfil' },
-        { text: 'Seção', value: 'secao' },
-        { text: 'Material', value: 'material' },
-        { text: 'Dimensões', value: 'dimensoes' },
-        { text: 'Nº_Peças', value: 'pecas' },
-        { text: 'Área_mm²', value: 'area' },
-        { text: 'Preço_kg', value: 'preco_kg' },
-        { text: 'Peso_metro', value: 'peso_m' },
-        { text: 'Preço_metro', value: 'preco_m' },
-        { text: 'Peso_peça', value: 'peso_peca' },
-        { text: 'Preço_peça', value: 'preco_peca' },
-        { text: 'Peso_Total', value: 'peso_total' },
-        { text: 'Valor_Total', value: 'valor_total' },
+        { text: 'Item', value: 'id', formato: '' },
+        { text: 'Perfil', value: 'perfil', formato: '' },
+        { text: 'Seção', value: 'secao', formato: '' },
+        { text: 'Material', value: 'material', formato: '' },
+        { text: 'Dimensões', value: 'dimensoes', formato: '' },
+        { text: 'Nº_Peças', value: 'pecas', align: 'end', formato: '' },
+        { text: 'Área_mm²', value: 'area', align: 'end', formato: 'virgula' },
+        { text: 'Preço_por_quilo', value: 'preco_kg', align: 'end', formato: 'moeda' },
+        { text: 'Peso_por_metro', value: 'peso_m', align: 'end', formato: 'virgula' },
+        { text: 'Preço_por_metro', value: 'preco_m', align: 'end', formato: 'moeda' },
+        { text: 'Peso_por_peça', value: 'peso_peca', align: 'end', formato: 'virgula' },
+        { text: 'Preço_por_peça', value: 'preco_peca', align: 'end', formato: 'moeda' },
+        { text: 'Peso_Total', value: 'peso_total', align: 'end', formato: 'virgula' },
+        { text: 'Valor_Calculado', value: 'valor_total', align: 'end', formato: 'moeda' },
       ],
     }),
     methods: {
       valorTotal() {
         const valor = this.items.reduce((acc, i) => acc + (i['valor_total'] || 0), 0)
         return funcoes_formato.moeda(valor)
+      },
+      virgula: (value, header) => {
+        const formato = header.formato
+        if (formato === 'virgula') return funcoes_formato.virgula(value)
+        else if (formato === 'moeda') return funcoes_formato.moeda(value)
+        else return value
+      }
     }
-  }
   }
 </script>
 
