@@ -5,8 +5,14 @@
       :headers="headers"
       :items="items"
       item-key="id"
-      class="elevation-1"
-    ></v-data-table>
+      class="elevation-1">
+      <template slot="body.append">
+          <tr class="red--text">
+              <th class="title">TOTAL</th>
+              <th class="title">{{  }}</th>
+          </tr>
+      </template>
+    </v-data-table>
   </v-card>
 </v-container>
 </template>
@@ -52,7 +58,23 @@
           perfil: 'Tubo',
           secao: 'Redondo',
           material: 'Alumínio',
-          dimensoes: '25,4mm x 25,4mm x 3m',
+          dimensoes: '50,8mm x 3,17mm x 6m',
+          pecas: 2,
+          area: 474.099,
+          preco_kg: 52.800,
+          peso_m: 1.328,
+          preco_m: 70.119,
+          peso_peca: 7.965,
+          preco_peca: 420.552,
+          peso_total: 15.930,
+          valor_total: 841.104,
+        },
+        {
+          id: 4,
+          perfil: 'Vergalhão',
+          secao: 'Quadrado',
+          material: 'Alumínio',
+          dimensoes: '25.4mm X 25.44mm X 3m',
           pecas: 1,
           area: 645.160,
           preco_kg: 1.000,
@@ -62,22 +84,6 @@
           preco_peca: 5.420,
           peso_total: 5.420,
           valor_total: 5.420,
-        },
-        {
-          id: 4,
-          perfil: 'Vergalhão',
-          secao: 'Quadrado',
-          material: 'Alumínio',
-          dimensoes: '7,93mm x 1,58mm X 3m',
-          pecas: 40,
-          area: 31.504,
-          preco_kg: 65.434,
-          peso_m: 0.089,
-          preco_m: 65.434,
-          peso_peca: 0.265,
-          preco_peca: 17.340,
-          peso_total: 10.601,
-          valor_total: 17.340,
         },
       ],
       headers: [
