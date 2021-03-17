@@ -24,7 +24,6 @@ export default {
   components: {
     CalculoPeca, TabelaOrcamento
   },
-
   data: () => ({
     
   }),

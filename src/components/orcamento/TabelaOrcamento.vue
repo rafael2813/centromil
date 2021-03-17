@@ -6,10 +6,10 @@
       :items="items"
       item-key="id"
       class="elevation-1">
-      <template slot="body.append">
+      <template slot="footer">
           <tr class="red--text">
-              <th class="title">TOTAL</th>
-              <th class="title">{{  }}</th>
+              <th class="title">TOTAL: </th>
+              <th class="title">{{ valorTotal() }}</th>
           </tr>
       </template>
     </v-data-table>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+  import funcoes_formato from '@/functions/funcoes_formato'
   export default {
     data: () => ({
       items: [
@@ -103,6 +104,12 @@
         { text: 'Valor_Total', value: 'valor_total' },
       ],
     }),
+    methods: {
+      valorTotal() {
+        const valor = this.items.reduce((acc, i) => acc + (i['valor_total'] || 0), 0)
+        return funcoes_formato.moeda(valor)
+    }
+  }
   }
 </script>
 

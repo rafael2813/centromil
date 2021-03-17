@@ -55,16 +55,16 @@
             PESO POR PEÇA = {{ peso_por_peca | virgula }} kg
           </div>
           <div class="px-4 pt-3 font-weight-black">
-            PREÇO POR {{ preco[1].unidade.toUpperCase() }} = R$ {{ preco[1].valor | virgula }}
+            PREÇO POR {{ preco[1].unidade.toUpperCase() }} = {{ preco[1].valor | moeda }}
           </div>
           <div class="px-4 pt-3 font-weight-black">
-            PREÇO POR {{ preco[2].unidade.toUpperCase() }} = R$ {{ preco[2].valor | virgula }}
+            PREÇO POR {{ preco[2].unidade.toUpperCase() }} = {{ preco[2].valor | moeda }}
           </div>
           <div class="px-4 pt-3 font-weight-black">
             PESO TOTAL = {{ peso_total | virgula }} kg
           </div>
           <div class="px-4 py-4 font-weight-black">
-            VALOR TOTAL = R$ {{ valor_total | virgula }}
+            VALOR TOTAL = {{ valor_total | moeda }}
           </div>
     </v-card>
   </v-container>
@@ -74,6 +74,7 @@
 import Perfil from './Perfil'
 import Medida from './Medida'
 import funcoes_area from '@/functions/funcoes_area'
+import funcoes_formato from '@/functions/funcoes_formato'
 
 export default {
   name: 'CalculoPeca',
@@ -146,13 +147,8 @@ export default {
     },
   },
   filters: {
-    virgula: value => {
-      if (value) return value.toLocaleString('pt-br', {
-        minimumFractionDigits: 3,
-        maximumFractionDigits: 3
-      })
-      else return '0,000'
-    },
+    virgula: value => funcoes_formato.virgula(value),
+    moeda: value => funcoes_formato.moeda(value),
   },
 };
 </script>
