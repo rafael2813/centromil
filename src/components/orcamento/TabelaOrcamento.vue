@@ -13,7 +13,7 @@
       </template>
       <template slot="footer">
         <v-row class="px-4 d-flex justify-space-between align-center" >
-          <v-col class="title">TOTAL:</v-col>
+          <v-col class="title">TOTAL</v-col>
           <v-col class="title red--text">{{ valorTotal() }}</v-col>
         </v-row>
       </template>
@@ -106,7 +106,7 @@
         { text: 'Peso_por_peça', value: 'peso_peca', align: 'end', formato: 'virgula' },
         { text: 'Preço_por_peça', value: 'preco_peca', align: 'end', formato: 'moeda' },
         { text: 'Peso_Total', value: 'peso_total', align: 'end', formato: 'virgula' },
-        { text: 'Valor_Calculado', value: 'valor_total', align: 'end', formato: 'moeda' },
+        { text: 'Valor_Totalizado', value: 'valor_total', align: 'end', formato: 'moeda' },
       ],
     }),
     methods: {

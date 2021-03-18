@@ -63,8 +63,13 @@
           <div class="px-4 pt-3 font-weight-black">
             PESO TOTAL = {{ peso_total | virgula }} kg
           </div>
-          <div class="px-4 py-4 font-weight-black">
+          <div class="px-4 py-4 font-weight-black red--text d-flex justify-space-between align-center">
             VALOR TOTAL = {{ valor_total | moeda }}
+            <v-btn class='green white--text' @click="salvarProduto">
+              Acrescentar ao Orçamento
+              <v-icon class="pl-5">mdi-plus</v-icon>
+              <v-icon>mdi-currency-brl</v-icon>
+            </v-btn>
           </div>
     </v-card>
   </v-container>
@@ -87,6 +92,7 @@ export default {
       { id: 1, dimensao: 'Largura', unidade: 'mm', valor: null, visivel: true },
       { id: 2, dimensao: 'Espessura', unidade: 'mm', valor: null, visivel: true },
     ],
+    dimensoes: '',
     materiais: [
       { id: 0, metal: 'Alumínio', massa_especifica: 2.80 /*2.71*/ },
       { id: 1, metal: 'Bronze', massa_especifica: 9.00 /*8.86*/ },
@@ -103,6 +109,8 @@ export default {
     ],
     comprimento: null,
     valor_kg: null,
+    valor_m: '',
+    valor_peca: '',
     quantidade: null,
   }),
   computed: {
@@ -127,23 +135,68 @@ export default {
     },
     valor_total() {
       if (this.preco[0].unidade === 'Quilo') return Math.ceil(this.valor_kg * this.peso_total * 1000) / 1000
-      else if (this.preco[0].unidade === 'Metro') return Math.ceil(this.valor_kg * this.comprimento * 1000) / 1000
-      else return Math.ceil(this.valor_kg * this.peso_por_peca * 1000) / 1000
+      else if (this.preco[0].unidade === 'Metro') return Math.ceil(this.valor_m * this.comprimento * 1000) / 1000
+      else return Math.ceil(this.valor_peca * this.quantidade * 1000) / 1000
     },
   },
   methods: {
+    carregarDimensoes() {
+      this.dimensoes = ''
+      for (let m of this.medidas) {
+        if (m.visivel) {
+          this.dimensoes += `${m.valor}${m.unidade}`
+          if (m.id < 2) this.dimensoes += ' x '
+        }
+        if (this.secao === 'Quadrado') {
+          this.dimensoes = `${this.dimensao[0].valor}${this.dimensao[0].unidade} x ${this.dimensoes}`
+        }
+        this.dimensoes += `${this.comprimento}m`
+      }
+    },
     preco_por() {
-      if (this.preco[0].unidade === 'Quilo') this.valor_kg = this.preco[0].valor
-      else if (this.preco[0].unidade === 'Metro') this.valor_kg = this.preco[0].valor / this.peso_por_metro
-      else this.valor_kg = this.preco[0].valor / this.peso_por_peca
+      if (this.preco[0].unidade === 'Quilo') {
+        this.valor_kg = this.preco[0].valor
+        this.valor_m = this.valor_kg * this.peso_por_metro
+        this.valor_peca = this.valor_kg * this.peso_por_peca
+      }
+      else if (this.preco[0].unidade === 'Metro') {
+        this.valor_kg = this.preco[0].valor / this.peso_por_metro
+        this.valor_m = this.preco[0].valor
+        this.valor_peca = this.valor_kg * this.peso_por_peca * 1000
+      }
+      else {
+        this.valor_kg = this.preco[0].valor / this.peso_por_peca
+        this.valor_m = this.valor_kg * this.peso_por_metro
+        this.valor_peca = this.preco[0].valor
+      }
       this.preco[1].unidade = (this.preco[0].unidade === 'Quilo') ? 'Metro' : 'Quilo'
       this.preco[2].unidade = (this.preco[0].unidade === 'Peça') ? 'Metro' : 'Peça'
-      this.preco[1].valor = (this.preco[0].unidade === 'Quilo')
-        ? Math.ceil(this.valor_kg * this.peso_por_metro * 1000) / 1000
-        : Math.ceil(this.valor_kg * 1000) / 1000
-      this.preco[2].valor = (this.preco[0].unidade === 'Peça')
-        ? Math.ceil(this.valor_kg * 1000) / 1000
-        : Math.ceil(this.valor_kg * this.peso_por_peca * 1000) / 1000
+      this.preco[1].valor = (this.preco[0].unidade === 'Quilo') ? this.valor_m : this.valor_kg
+      this.preco[2].valor = (this.preco[0].unidade === 'Peça') ? this.valor_m : this.valor_peca
+    },
+    salvarProduto() {
+      this.carregarDimensoes()
+      if (this.valor_total) {
+        localStorage.setItem('produtos', JSON.stringify(
+          {
+            id: 1,
+            perfil: this.geometria.perfil,
+            secao: this.geometria.secao,
+            material: this.material.split(': ')[0],
+            dimensoes: this.dimensoes,
+            pecas: this.quantidade,
+            area: this.area,
+            preco_kg: this.valor_kg,
+            peso_m: this.peso_por_metro,
+            preco_m: this.valor_m,
+            peso_peca: this.peso_por_peca,
+            preco_peca: this.valor_peca,
+            peso_total: this.peso_total,
+            valor_total: this.valor_total,
+          }
+        ))
+      }
+      console.log(localStorage.getItem('produtos'))
     },
   },
   filters: {
