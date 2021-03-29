@@ -64,7 +64,7 @@
   }
 </script>
 
-<style>
+<style scoped>
 .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
     font-size: 1.0rem !important;
 }

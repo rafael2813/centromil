@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-fade">
-    <v-row>
+    <v-row class="my-n5">
       <v-col cols="6" class="px-1 mx-0">
         <v-select v-model="geometria.perfil" :items="perfis"
           @change="tipo_perfil(), secao_transversal()" label="Perfil"
@@ -99,7 +99,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .slide-fade-enter-active {
   transition: all 1.2s ease;
 }

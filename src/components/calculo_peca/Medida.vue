@@ -7,7 +7,7 @@
           color="blue darken-4">
         </v-select>
       </v-col>
-      <v-col v-if="metro" cols="8" class="pr-1 mx-0">
+      <v-col v-if="metro" cols="8" class="pr-1 mx-00">
         <v-text-field v-model="medida.valor" type="number"
           :label="medida.dimensao" outlined color="blue darken-4"/>
       </v-col>
@@ -74,7 +74,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .slide-fade-enter-active {
   transition: all 1.2s ease;
 }

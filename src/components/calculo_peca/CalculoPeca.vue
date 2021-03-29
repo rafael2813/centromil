@@ -14,12 +14,12 @@
           <Perfil :geometria='geometria' :medidas=medidas />
         </v-col>
       </v-row>
-      <v-row class="px-4 d-flex justify-space-between align-center" >
+      <v-row class="px-4 my-n5 d-flex justify-space-between align-center" >
         <v-col v-for="medida in medidas" :key="medida.id" >
           <Medida :medida="medida" />
         </v-col>
       </v-row>
-      <v-row class="px-4 d-flex justify-space-between align-center">
+      <v-row class="px-4 my-n5 d-flex justify-space-between align-center">
         <v-col cols="2" class="px-1 mx-0">
           <v-select v-model.number="preco[0].unidade" :items="precos"
             @change="preco_por()" label="Preço por" outlined
@@ -209,6 +209,6 @@ export default {
 };
 </script>
 
-<style>
-  
+<style scoped>
+
 </style>
