@@ -145,40 +145,44 @@ export default {
       for (let m of this.medidas) {
         if (m.visivel) {
           this.dimensoes += `${m.valor}${m.unidade}`
-          if (m.id < 2) this.dimensoes += ' x '
+          this.dimensoes += ' x '
         }
-        if (this.secao === 'Quadrado') {
-          this.dimensoes = `${this.dimensao[0].valor}${this.dimensao[0].unidade} x ${this.dimensoes}`
-        }
-        this.dimensoes += `${this.comprimento}m`
       }
+      if (this.geometria.secao === 'Quadrado') {
+        this.dimensoes = `${this.medidas[0].valor}${this.medidas[0].unidade} x ${this.dimensoes}`
+        
+      }
+      this.dimensoes += `${this.comprimento}m`
     },
     preco_por() {
       if (this.preco[0].unidade === 'Quilo') {
-        this.valor_kg = this.preco[0].valor
-        this.valor_m = this.valor_kg * this.peso_por_metro
-        this.valor_peca = this.valor_kg * this.peso_por_peca
+        this.valor_kg = Math.ceil(this.preco[0].valor * 1000) / 1000
+        this.valor_m = Math.ceil(this.valor_kg * this.peso_por_metro * 1000) / 1000
+        this.valor_peca = Math.ceil(this.valor_kg * this.peso_por_peca * 1000) / 1000
       }
       else if (this.preco[0].unidade === 'Metro') {
-        this.valor_kg = this.preco[0].valor / this.peso_por_metro
-        this.valor_m = this.preco[0].valor
-        this.valor_peca = this.valor_kg * this.peso_por_peca * 1000
+        this.valor_kg = Math.ceil(this.preco[0].valor / this.peso_por_metro * 1000) / 1000
+        this.valor_m = Math.ceil(this.preco[0].valor * 1000) / 1000
+        this.valor_peca = Math.ceil(this.valor_kg * this.peso_por_peca * 1000) / 1000
       }
       else {
-        this.valor_kg = this.preco[0].valor / this.peso_por_peca
-        this.valor_m = this.valor_kg * this.peso_por_metro
-        this.valor_peca = this.preco[0].valor
+        this.valor_kg = Math.ceil(this.preco[0].valor / this.peso_por_peca * 1000) / 1000
+        this.valor_m = Math.ceil(this.valor_kg * this.peso_por_metro * 1000) / 1000
+        this.valor_peca = Math.ceil(this.preco[0].valor * 1000) / 1000
       }
       this.preco[1].unidade = (this.preco[0].unidade === 'Quilo') ? 'Metro' : 'Quilo'
       this.preco[2].unidade = (this.preco[0].unidade === 'Peça') ? 'Metro' : 'Peça'
-      this.preco[1].valor = (this.preco[0].unidade === 'Quilo') ? this.valor_m : this.valor_kg
-      this.preco[2].valor = (this.preco[0].unidade === 'Peça') ? this.valor_m : this.valor_peca
+      this.preco[1].valor = (this.preco[0].unidade === 'Quilo')
+        ? Math.ceil(this.valor_m * 1000) / 1000
+        : Math.ceil(this.valor_kg * 1000) / 1000
+      this.preco[2].valor = (this.preco[0].unidade === 'Peça')
+        ? Math.ceil(this.valor_m * 1000) / 1000
+        : Math.ceil(this.valor_peca * 1000) / 1000
     },
     salvarProduto() {
       this.carregarDimensoes()
       if (this.valor_total) {
-        localStorage.setItem('produtos', JSON.stringify(
-          {
+        localStorage.setItem('produtos', JSON.stringify({
             id: 1,
             perfil: this.geometria.perfil,
             secao: this.geometria.secao,
@@ -193,10 +197,9 @@ export default {
             preco_peca: this.valor_peca,
             peso_total: this.peso_total,
             valor_total: this.valor_total,
-          }
-        ))
+          })
+        )
       }
-      console.log(localStorage.getItem('produtos'))
     },
   },
   filters: {

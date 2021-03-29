@@ -26,72 +26,7 @@
   import funcoes_formato from '@/functions/funcoes_formato'
   export default {
     data: () => ({
-      items: [
-        {
-          id: 1,
-          perfil: 'Chapa',
-          secao: 'Chapa',
-          material: 'Alumínio',
-          dimensoes: '1250mm X 2mm X 3m',
-          pecas: 1,
-          area: 2500.000,
-          preco_kg: 56.000,
-          peso_m: 7.000,
-          preco_m: 392.000,
-          peso_peca: 21.000,
-          preco_peca: 1176.000,
-          peso_total: 21.000,
-          valor_total: 1176.000,
-        },
-        {
-          id: 2,
-          perfil: 'Vergalhão',
-          secao: 'Sextavado',
-          material: 'Latão',
-          dimensoes: '7/32" X 3m',
-          pecas: 1,
-          area: 26.736,
-          preco_kg: 84.000,
-          peso_m: 0.238,
-          preco_m: 19.992,
-          peso_peca: 0.714,
-          preco_peca: 59.976,
-          peso_total: 0.714,
-          valor_total: 59.976,
-        },
-        {
-          id: 3,
-          perfil: 'Tubo',
-          secao: 'Redondo',
-          material: 'Alumínio',
-          dimensoes: '50,8mm x 3,17mm x 6m',
-          pecas: 2,
-          area: 474.099,
-          preco_kg: 52.800,
-          peso_m: 1.328,
-          preco_m: 70.119,
-          peso_peca: 7.965,
-          preco_peca: 420.552,
-          peso_total: 15.930,
-          valor_total: 841.104,
-        },
-        {
-          id: 4,
-          perfil: 'Vergalhão',
-          secao: 'Quadrado',
-          material: 'Alumínio',
-          dimensoes: '25.4mm X 25.44mm X 3m',
-          pecas: 1,
-          area: 645.160,
-          preco_kg: 1.000,
-          peso_m: 1.807,
-          preco_m: 1.807,
-          peso_peca: 5.420,
-          preco_peca: 5.420,
-          peso_total: 5.420,
-          valor_total: 5.420,
-        },
-      ],
+      items: [],
       headers: [
         { text: 'Item', value: 'id', formato: '' },
         { text: 'Perfil', value: 'perfil', formato: '' },
@@ -119,7 +54,12 @@
         if (formato === 'virgula') return funcoes_formato.virgula(value)
         else if (formato === 'moeda') return funcoes_formato.moeda(value)
         else return value
-      }
+      },
+    },
+    mounted() {
+      const produtos = JSON.parse(localStorage.getItem('produtos'))
+      if (produtos) this.items.push(produtos)
+      console.log(this.items)
     }
   }
 </script>
