@@ -135,7 +135,7 @@ export default {
     },
     valor_total() {
       if (this.preco[0].unidade === 'Quilo') return Math.ceil(this.valor_kg * this.peso_total * 1000) / 1000
-      else if (this.preco[0].unidade === 'Metro') return Math.ceil(this.valor_m * this.comprimento * 1000) / 1000
+      else if (this.preco[0].unidade === 'Metro') return Math.ceil(this.valor_m * this.comprimento * this.quantidade * 1000) / 1000
       else return Math.ceil(this.valor_peca * this.quantidade * 1000) / 1000
     },
   },
