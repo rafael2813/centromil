@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import eventbus from '@/eventbus'
 import Perfil from './Perfil'
 import Medida from './Medida'
 import funcoes_area from '@/functions/funcoes_area'
@@ -112,6 +113,8 @@ export default {
     valor_m: '',
     valor_peca: '',
     quantidade: null,
+    produtos: [],
+    id: 0,
   }),
   computed: {
     area() {
@@ -182,23 +185,24 @@ export default {
     salvarProduto() {
       this.carregarDimensoes()
       if (this.valor_total) {
-        localStorage.setItem('produtos', JSON.stringify({
-            id: 1,
-            perfil: this.geometria.perfil,
-            secao: this.geometria.secao,
-            material: this.material.split(': ')[0],
-            dimensoes: this.dimensoes,
-            pecas: this.quantidade,
-            area: this.area,
-            preco_kg: this.valor_kg,
-            peso_m: this.peso_por_metro,
-            preco_m: this.valor_m,
-            peso_peca: this.peso_por_peca,
-            preco_peca: this.valor_peca,
-            peso_total: this.peso_total,
-            valor_total: this.valor_total,
-          })
-        )
+        this.produtos.push({
+          id: ++this.id,
+          perfil: this.geometria.perfil,
+          secao: this.geometria.secao,
+          material: this.material.split(': ')[0],
+          dimensoes: this.dimensoes,
+          pecas: this.quantidade,
+          area: this.area,
+          preco_kg: this.valor_kg,
+          peso_m: this.peso_por_metro,
+          preco_m: this.valor_m,
+          peso_peca: this.peso_por_peca,
+          preco_peca: this.valor_peca,
+          peso_total: this.peso_total,
+          valor_total: this.valor_total,
+        })
+        localStorage.setItem('produtos', JSON.stringify(this.produtos))
+        eventbus.$emit('novoProduto')
       }
     },
   },

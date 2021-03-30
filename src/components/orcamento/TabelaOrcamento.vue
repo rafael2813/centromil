@@ -23,6 +23,7 @@
 </template>
 
 <script>
+  import eventbus from '@/eventbus'
   import funcoes_formato from '@/functions/funcoes_formato'
   export default {
     data: () => ({
@@ -46,8 +47,11 @@
     }),
     methods: {
       valorTotal() {
-        const valor = this.items.reduce((acc, i) => acc + (i['valor_total'] || 0), 0)
-        return funcoes_formato.moeda(valor)
+        if (this.items !== {}) {
+          const valor = this.items.reduce((acc, i) => acc + (i['valor_total'] || 0), 0)
+          return funcoes_formato.moeda(valor)
+        }
+        return 'R$ 0,000'
       },
       virgula: (value, header) => {
         const formato = header.formato
@@ -56,15 +60,16 @@
         else return value
       },
     },
-    mounted() {
-      const produtos = JSON.parse(localStorage.getItem('produtos'))
-      if (produtos) this.items.push(produtos)
-      console.log(this.items)
+    created() {
+      localStorage.setItem('produtos', JSON.stringify([]))
+      eventbus.$on('novoProduto', () => {
+        this.items = JSON.parse(localStorage.getItem('produtos'))
+      })
     }
   }
 </script>
 
-<style scoped>
+<style>
 .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
     font-size: 1.0rem !important;
 }
