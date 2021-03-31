@@ -17,7 +17,7 @@
         </div>
       </template>
       <template slot="footer">
-        <v-row class="px-4">
+        <v-row class="px-6">
           <v-col class="title">TOTAL</v-col>
           <v-col cols="3" class="title red--text justify-content-end"
             align="right">
@@ -70,9 +70,14 @@
       },
       excluir(item) {
         this.items.splice(this.items.indexOf(item), 1)
-        localStorage.clear()
+        this.renumerar()
         localStorage.setItem('produtos', JSON.stringify(this.items))
       },
+      renumerar() {
+        for (let i = 0; i < this.items.length; i++) {
+          this.items[i].id = i + 1
+        }
+      }
     },
     created() {
       eventbus.$on('novoProduto', () => {
