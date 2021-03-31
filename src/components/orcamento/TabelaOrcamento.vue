@@ -9,12 +9,20 @@
       <template v-for="(h, index) in headers" v-slot:[`item.${h.value}`]="{ item }">
         <div :key="index" class="align-center">
           {{ virgula(item[h.value], h) }}
+          <span v-if="h.icon">
+            <v-icon large color="red" @click="excluir(item)">
+              mdi-delete
+            </v-icon>
+          </span>
         </div>
       </template>
       <template slot="footer">
-        <v-row class="px-4 d-flex justify-space-between align-center" >
+        <v-row class="px-4">
           <v-col class="title">TOTAL</v-col>
-          <v-col class="title red--text">{{ valorTotal() }}</v-col>
+          <v-col cols="3" class="title red--text justify-content-end"
+            align="right">
+             {{ valorTotal() }}
+          </v-col>
         </v-row>
       </template>
     </v-data-table>
@@ -29,12 +37,13 @@
     data: () => ({
       items: [],
       headers: [
-        { text: 'Item', value: 'id', formato: '' },
-        { text: 'Perfil', value: 'perfil', formato: '' },
-        { text: 'Seção', value: 'secao', formato: '' },
-        { text: 'Material', value: 'material', formato: '' },
-        { text: 'Dimensões', value: 'dimensoes', formato: '' },
-        { text: 'Nº_Peças', value: 'pecas', align: 'end', formato: '' },
+        { text: '', value: 'excluir', align: 'center', sortable: false, icon: 'delete' },
+        { text: 'Item', value: 'id' },
+        { text: 'Perfil', value: 'perfil' },
+        { text: 'Seção', value: 'secao' },
+        { text: 'Material', value: 'material' },
+        { text: 'Dimensões', value: 'dimensoes' },
+        { text: 'Nº_Peças', value: 'pecas', align: 'center' },
         { text: 'Área_mm²', value: 'area', align: 'end', formato: 'virgula' },
         { text: 'Preço_por_quilo', value: 'preco_kg', align: 'end', formato: 'moeda' },
         { text: 'Peso_por_metro', value: 'peso_m', align: 'end', formato: 'virgula' },
@@ -58,6 +67,11 @@
         if (formato === 'virgula') return funcoes_formato.virgula(value)
         else if (formato === 'moeda') return funcoes_formato.moeda(value)
         else return value
+      },
+      excluir(item) {
+        this.items.splice(this.items.indexOf(item), 1)
+        localStorage.clear()
+        localStorage.setItem('produtos', JSON.stringify(this.items))
       },
     },
     created() {

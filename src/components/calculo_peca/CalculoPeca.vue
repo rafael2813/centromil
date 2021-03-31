@@ -186,6 +186,7 @@ export default {
     },
     salvarProduto() {
       this.carregarDimensoes()
+      this.produtos = JSON.parse(localStorage.getItem('produtos'))
       if (this.valor_total) {
         this.produtos.push({
           id: ++this.id,
