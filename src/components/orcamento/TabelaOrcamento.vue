@@ -33,6 +33,8 @@
 <script>
   import eventbus from '@/eventbus'
   import funcoes_formato from '@/functions/funcoes_formato'
+  import funcao_renumerar from '@/functions/funcao_renumerar'
+
   export default {
     data: () => ({
       items: [],
@@ -70,14 +72,9 @@
       },
       excluir(item) {
         this.items.splice(this.items.indexOf(item), 1)
-        this.renumerar()
+        funcao_renumerar.renumerar(this.items)
         localStorage.setItem('produtos', JSON.stringify(this.items))
       },
-      renumerar() {
-        for (let i = 0; i < this.items.length; i++) {
-          this.items[i].id = i + 1
-        }
-      }
     },
     created() {
       eventbus.$on('novoProduto', () => {

@@ -81,6 +81,7 @@ import Perfil from './Perfil'
 import Medida from './Medida'
 import funcoes_area from '@/functions/funcoes_area'
 import funcoes_formato from '@/functions/funcoes_formato'
+import funcao_renumerar from '@/functions/funcao_renumerar'
 
 export default {
   name: 'CalculoPeca',
@@ -204,6 +205,7 @@ export default {
           peso_total: this.peso_total,
           valor_total: this.valor_total,
         })
+        funcao_renumerar.renumerar(this.produtos)
         localStorage.setItem('produtos', JSON.stringify(this.produtos))
         eventbus.$emit('novoProduto')
       }
