@@ -213,7 +213,8 @@ export default {
     moeda: value => funcoes_formato.moeda(value),
   },
   created() {
-    this.salvarProduto()
+    localStorage.setItem('produtos', JSON.stringify([]))
+    eventbus.$emit('novoProduto')
   }
 };
 </script>

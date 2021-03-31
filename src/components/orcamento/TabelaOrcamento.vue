@@ -61,11 +61,10 @@
       },
     },
     created() {
-      localStorage.setItem('produtos', JSON.stringify([]))
       eventbus.$on('novoProduto', () => {
         this.items = JSON.parse(localStorage.getItem('produtos'))
       })
-    }
+    },
   }
 </script>
 

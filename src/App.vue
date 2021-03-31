@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-toolbar dense color="blue darken-4" dark elevation=5>
-      <v-tabs dense>
+      <v-tabs grow dense v-model="ativa">
         <v-tab>Cálculo de Peça</v-tab>
         <v-tab>Orçamento</v-tab>
         <v-tab-item>
@@ -20,12 +20,11 @@ import CalculoPeca from '@/components/calculo_peca/CalculoPeca'
 import TabelaOrcamento from '@/components/orcamento/TabelaOrcamento'
 export default {
   name: 'App',
-
   components: {
     CalculoPeca, TabelaOrcamento
   },
   data: () => ({
-    
+    ativa: 1
   }),
 };
 </script>
