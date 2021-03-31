@@ -30,7 +30,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
   .v-toolbar {
     max-height: 50px;
   }

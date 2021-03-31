@@ -89,9 +89,9 @@ export default {
     geometria: { 'perfil': null, 'secao': null, 'espessura': false, 'formula': '' },
     formula: '',
     medidas: [
-      { id: 0, dimensao: 'Altura', unidade: 'mm', valor: null, visivel: true },
-      { id: 1, dimensao: 'Largura', unidade: 'mm', valor: null, visivel: true },
-      { id: 2, dimensao: 'Espessura', unidade: 'mm', valor: null, visivel: true },
+      { id: 0, dimensao: 'Altura', unidade: 'mm', valor: null, visivel: true, polegada: '' },
+      { id: 1, dimensao: 'Largura', unidade: 'mm', valor: null, visivel: true, polegada: '' },
+      { id: 2, dimensao: 'Espessura', unidade: 'mm', valor: null, visivel: true, polegada: '' },
     ],
     dimensoes: '',
     materiais: [
@@ -147,12 +147,14 @@ export default {
       this.dimensoes = ''
       for (let m of this.medidas) {
         if (m.visivel) {
-          this.dimensoes += `${m.valor}${m.unidade}`
+          this.dimensoes += (m.unidade === 'mm') ? `${m.valor}${m.unidade}` : `${m.polegada}${m.unidade}`
           this.dimensoes += ' x '
         }
       }
       if (this.geometria.secao === 'Quadrado') {
-        this.dimensoes = `${this.medidas[0].valor}${this.medidas[0].unidade} x ${this.dimensoes}`
+        this.dimensoes = (this.medidas[0].unidade === 'mm')
+          ? `${this.medidas[0].valor}${this.medidas[0].unidade} x ${this.dimensoes}`
+          : `${this.medidas[0].polegada}${this.medidas[0].unidade} x ${this.dimensoes}`
         
       }
       this.dimensoes += `${this.comprimento}m`
@@ -210,6 +212,9 @@ export default {
     virgula: value => funcoes_formato.virgula(value),
     moeda: value => funcoes_formato.moeda(value),
   },
+  created() {
+    this.salvarProduto()
+  }
 };
 </script>
 
