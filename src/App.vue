@@ -2,8 +2,14 @@
   <v-app>
     <v-toolbar dense color="blue darken-4" dark elevation=5>
       <v-tabs grow dense v-model="ativa">
-        <v-tab>Cálculo de Peça</v-tab>
-        <v-tab>Orçamento</v-tab>
+        <v-tab>
+          <v-icon class="pr-3">mdi-calculator</v-icon>
+          Cálculo de Peça
+        </v-tab>
+        <v-tab>
+          <v-icon class="pr-3">mdi-cart-variant</v-icon>
+          Orçamento
+        </v-tab>
         <v-tab-item>
           <CalculoPeca />
         </v-tab-item>
