@@ -4,7 +4,10 @@
     <v-data-table
       :headers="headers"
       :items="items"
-      item-key="id"
+      hide-default-footer
+      :items-per-page="5"
+      :page.sync="page"
+      @page-count="pageCount = $event"
       class="elevation-1">
       <template v-for="(h, index) in headers" v-slot:[`item.${h.value}`]="{ item }">
         <div :key="index" class="align-center">
@@ -17,6 +20,10 @@
         </div>
       </template>
       <template slot="footer">
+        <v-pagination
+          v-model="page"
+          :length="pageCount">
+        </v-pagination>
         <v-row class="px-6">
           <v-col class="title">TOTAL</v-col>
           <v-col cols="3" class="title red--text justify-content-end"
@@ -26,6 +33,7 @@
         </v-row>
       </template>
     </v-data-table>
+    <v-divider></v-divider>
   </v-card>
 </v-container>
 </template>
@@ -55,6 +63,8 @@
         { text: 'Peso_Total', value: 'peso_total', align: 'end', formato: 'virgula' },
         { text: 'Valor_Totalizado', value: 'valor_total', align: 'end', formato: 'moeda' },
       ],
+      page: 1,
+      pageCount: 0,
     }),
     methods: {
       valorTotal() {

@@ -42,35 +42,35 @@
         </v-col>
       </v-row>
       <v-divider></v-divider>
-          <div class="px-4 pt-5 font-weight-black">
-            FÓRMULA DO CÁLCULO DA SEÇÃO TRANSVERSAL = {{ geometria.formula }}
-          </div>
-          <div class="px-4 pt-3 font-weight-black">
-            ÁREA DA SEÇÃO TRANSVERSAL = {{ area | virgula }} mm²
-          </div>
-          <div class="px-4 pt-3 font-weight-black">
-            PESO POR METRO LINEAR = {{ peso_por_metro | virgula }} kg / m
-          </div>
-          <div class="px-4 pt-3 font-weight-black">
-            PESO POR PEÇA = {{ peso_por_peca | virgula }} kg
-          </div>
-          <div class="px-4 pt-3 font-weight-black">
-            PREÇO POR {{ preco[1].unidade.toUpperCase() }} = {{ preco[1].valor | moeda }}
-          </div>
-          <div class="px-4 pt-3 font-weight-black">
-            PREÇO POR {{ preco[2].unidade.toUpperCase() }} = {{ preco[2].valor | moeda }}
-          </div>
-          <div class="px-4 pt-3 font-weight-black">
-            PESO TOTAL = {{ peso_total | virgula }} kg
-          </div>
-          <div class="px-4 py-4 font-weight-black red--text d-flex justify-space-between align-center">
-            VALOR TOTAL = {{ valor_total | moeda }}
-            <v-btn class='green white--text' @click="salvarProduto">
-              Acrescentar ao Orçamento
-              <v-icon class="pl-5">mdi-plus</v-icon>
-              <v-icon>mdi-currency-brl</v-icon>
-            </v-btn>
-          </div>
+      <div class="px-4 pt-5 font-weight-black">
+        FÓRMULA DO CÁLCULO DA SEÇÃO TRANSVERSAL = {{ geometria.formula }}
+      </div>
+      <div class="px-4 pt-3 font-weight-black">
+        ÁREA DA SEÇÃO TRANSVERSAL = {{ area | virgula }} mm²
+      </div>
+      <div class="px-4 pt-3 font-weight-black">
+        PESO POR METRO LINEAR = {{ peso_por_metro | virgula }} kg / m
+      </div>
+      <div class="px-4 pt-3 font-weight-black">
+        PESO POR PEÇA = {{ peso_por_peca | virgula }} kg
+      </div>
+      <div class="px-4 pt-3 font-weight-black">
+        PREÇO POR {{ preco[1].unidade.toUpperCase() }} = {{ preco[1].valor | moeda }}
+      </div>
+      <div class="px-4 pt-3 font-weight-black">
+        PREÇO POR {{ preco[2].unidade.toUpperCase() }} = {{ preco[2].valor | moeda }}
+      </div>
+      <div class="px-4 pt-3 font-weight-black">
+        PESO TOTAL = {{ peso_total | virgula }} kg
+      </div>
+      <div class="px-4 py-4 font-weight-black red--text d-flex justify-space-between align-center">
+        VALOR TOTAL = {{ valor_total | moeda }}
+        <v-btn class='green white--text' @click="salvarProduto">
+          Acrescentar ao Orçamento
+          <v-icon class="pl-5">mdi-plus</v-icon>
+          <v-icon>mdi-currency-brl</v-icon>
+        </v-btn>
+      </div>
     </v-card>
   </v-container>
 </template>
@@ -140,7 +140,8 @@ export default {
     valor_total() {
       if (this.preco[0].unidade === 'Quilo') return Math.ceil(this.valor_kg * this.peso_total * 1000) / 1000
       else if (this.preco[0].unidade === 'Metro') return Math.ceil(this.valor_m * this.comprimento * this.quantidade * 1000) / 1000
-      else return Math.ceil(this.valor_peca * this.quantidade * 1000) / 1000
+      else if (this.preco[0].unidade === 'Peça')  return Math.ceil(this.valor_peca * this.quantidade * 1000) / 1000
+      else return 0
     },
   },
   methods: {
