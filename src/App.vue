@@ -10,11 +10,18 @@
           <v-icon class="pr-3">mdi-cart-variant</v-icon>
           Lista de Produtos
         </v-tab>
+        <v-tab>
+          <v-icon class="pr-3">mdi-currency-brl</v-icon>
+          Orçamentos
+        </v-tab>
         <v-tab-item>
           <CalculoPeca />
         </v-tab-item>
         <v-tab-item>
           <TabelaPecas />
+        </v-tab-item>
+        <v-tab-item>
+          <TabelaOrcamentos />
         </v-tab-item>
       </v-tabs>
     </v-toolbar>
@@ -24,10 +31,11 @@
 <script>
 import CalculoPeca from '@/components/calculo_peca/CalculoPeca'
 import TabelaPecas from '@/components/lista_produtos/TabelaPecas'
+import TabelaOrcamentos from '@/components/orcamentos/TabelaOrcamentos'
 export default {
   name: 'App',
   components: {
-    CalculoPeca, TabelaPecas
+    CalculoPeca, TabelaPecas, TabelaOrcamentos
   },
   data: () => ({
     ativa: 1

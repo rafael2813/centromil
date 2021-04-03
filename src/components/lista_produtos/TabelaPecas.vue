@@ -41,14 +41,16 @@
         <v-text-field
           v-model="nome" label="Nome" dense outlined
           color="blue darken-4"/>
-        <v-btn class="green white--text mt-9">
+        <v-btn block class="green white--text mt-9 justify-space-between">
           Salvar como Orçamento
-          <v-icon class="pl-3">mdi-plus</v-icon>
-          <v-icon>mdi-currency-brl</v-icon>
+          <div>
+            <v-icon class="pl-3">mdi-plus</v-icon>
+            <v-icon>mdi-currency-brl</v-icon>
+          </div>
         </v-btn>
       </v-col>
       <v-col cols="8">
-        <v-textarea outlined rows="4"
+        <v-textarea v-model="descricao" outlined rows="4"
           label="Descrição"></v-textarea>
       </v-col>
     </v-row>
@@ -81,6 +83,8 @@
         { text: 'Peso_Total', value: 'peso_total', align: 'end', formato: 'virgula' },
         { text: 'Valor_Totalizado', value: 'valor_total', align: 'end', formato: 'moeda' },
       ],
+      nome: '',
+      descricao: '',
       page: 1,
       pageCount: 0,
     }),

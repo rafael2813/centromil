@@ -1,0 +1,97 @@
+<template>
+<v-container px-0 fluid>
+  <v-card class="mx-1" tile elevation=10>
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      hide-default-footer
+      :items-per-page="10"
+      :page.sync="page"
+      @page-count="pageCount = $event"
+      class="elevation-1">
+      <template v-for="(h, index) in headers" v-slot:[`item.${h.value}`]="{ item }">
+        <div :key="index" class="align-center">
+          {{ virgula(item[h.value], h) }}
+          <span v-if="h.icon">
+            <v-icon v-if="h.icon === 'delete'"
+              large :color=h.color @click="excluir(item)">
+              mdi-{{ h.icon }}
+            </v-icon>
+            <v-icon v-else
+              large :color=h.color @click="carregar(item)">
+              mdi-{{ h.icon }}
+            </v-icon>
+          </span>
+        </div>
+      </template>
+      <template slot="footer">
+        <v-pagination class="mt-5"
+          v-model="page"
+          :length="pageCount">
+        </v-pagination>
+      </template>
+    </v-data-table>
+  </v-card>
+</v-container>
+</template>
+
+<script>
+  import eventbus from '@/eventbus'
+  import funcoes_formato from '@/functions/funcoes_formato'
+  import funcao_renumerar from '@/functions/funcao_renumerar'
+
+  export default {
+    data: () => ({
+      items: [{
+        id: 1,
+        nome: 'Marcio',
+        data_hora: '15/11/2020 16:30',
+        n_itens: 5,
+        peso_total: 75.500,
+        valor_total: 225.367,
+      }],
+      headers: [
+        { text: '', value: 'excluir', align: 'center', sortable: false, icon: 'delete', color: 'red' },
+        { text: 'Item', value: 'id' },
+        { text: 'Nome', value: 'nome' },
+        { text: 'Data_e_Hora', value: 'data_hora' },
+        { text: 'Nº_Itens', value: 'n_itens', align: 'end' },
+        { text: 'Peso_Total', value: 'peso_total', align: 'end', formato: 'virgula' },
+        { text: 'Valor_Totalizado', value: 'valor_total', align: 'end', formato: 'moeda' },
+        { text: '', value: 'carregar', align: 'center', sortable: false, icon: 'cart-variant', color: 'green' },
+      ],
+      page: 1,
+      pageCount: 0,
+    }),
+    methods: {
+      virgula: (value, header) => {
+        const formato = header.formato
+        if (formato === 'virgula') return funcoes_formato.virgula(value)
+        else if (formato === 'moeda') return funcoes_formato.moeda(value)
+        else return value
+      },
+      excluir(item) {
+        this.items.splice(this.items.indexOf(item), 1)
+        funcao_renumerar.renumerar(this.items)
+        localStorage.setItem('produtos', JSON.stringify(this.items))
+      },
+      carregar(item) {
+        console.log({...item})
+      },
+    },
+    created() {
+      eventbus.$on('novoProduto', () => {
+        this.items = JSON.parse(localStorage.getItem('produtos'))
+      })
+    },
+  }
+</script>
+
+<style>
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+      font-size: 0.85rem !important;
+  }
+  .v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
+    font-size: 0.85rem !important;
+  }
+</style>
