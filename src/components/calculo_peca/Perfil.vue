@@ -44,6 +44,7 @@ export default {
       }
       else if (this.geometria.perfil === 'Chapa') {
         this.secoes = ['Chapa']
+        this.geometria.secao = 'Chapa'
       }
     },
     secao_transversal() {
