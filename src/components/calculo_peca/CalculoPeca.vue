@@ -66,9 +66,9 @@
       <div class="px-4 py-4 font-weight-black red--text d-flex justify-space-between align-center">
         VALOR TOTAL = {{ valor_total | moeda }}
         <v-btn class='green white--text' @click="salvarProduto">
-          Acrescentar ao Orçamento
+          Acrescentar à Lista de Produtos
           <v-icon class="pl-5">mdi-plus</v-icon>
-          <v-icon>mdi-currency-brl</v-icon>
+          <v-icon>mdi-cart-variant</v-icon>
         </v-btn>
       </div>
     </v-card>

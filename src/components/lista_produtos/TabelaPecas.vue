@@ -35,6 +35,24 @@
     </v-data-table>
     <v-divider></v-divider>
   </v-card>
+  <v-card class="mx-1 mt-8 mb-4" tile elevation=10>
+    <v-row class="px-4">
+      <v-col cols="4">
+        <v-text-field
+          v-model="nome" label="Nome" dense outlined
+          color="blue darken-4"/>
+        <v-btn class="green white--text mt-9">
+          Salvar como Orçamento
+          <v-icon class="pl-3">mdi-plus</v-icon>
+          <v-icon>mdi-currency-brl</v-icon>
+        </v-btn>
+      </v-col>
+      <v-col cols="8">
+        <v-textarea outlined rows="4"
+          label="Descrição"></v-textarea>
+      </v-col>
+    </v-row>
+  </v-card>
 </v-container>
 </template>
 
@@ -52,7 +70,7 @@
         { text: 'Perfil', value: 'perfil' },
         { text: 'Seção', value: 'secao' },
         { text: 'Material', value: 'material' },
-        { text: 'Dimensões', value: 'dimensoes' },
+        { text: 'Dimensões_e_Comprimento', value: 'dimensoes' },
         { text: 'Nº_Peças', value: 'pecas', align: 'center' },
         { text: 'Área_mm²', value: 'area', align: 'end', formato: 'virgula' },
         { text: 'Preço_por_quilo', value: 'preco_kg', align: 'end', formato: 'moeda' },
@@ -95,10 +113,10 @@
 </script>
 
 <style>
-.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
-    font-size: 1.0rem !important;
-}
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
-   font-size: 0.9rem !important;
-}
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+      font-size: 0.85rem !important;
+  }
+  .v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
+    font-size: 0.85rem !important;
+  }
 </style>
