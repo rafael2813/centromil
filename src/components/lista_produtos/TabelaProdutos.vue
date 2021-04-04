@@ -134,6 +134,7 @@
           this.orcamentos.push({
             empresa: this.empresa,
             nome: this.nome,
+            descricao: this.descricao,
             data_hora: new Date().toLocaleString(),
             n_itens: this.items.length,
             items: this.items,
@@ -161,7 +162,6 @@
       eventbus.$on('novoProduto', () => {
         this.items = JSON.parse(localStorage.getItem('produtos'))
       })
-      localStorage.setItem('orcamentos', JSON.stringify([]))
     },
   }
 </script>

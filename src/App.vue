@@ -20,13 +20,13 @@
           <v-icon class="px-3">mdi-currency-brl</v-icon>
           Orçamentos
         </v-tab>
-        <v-tab-item>
-          <CalculoPeca/>
+        <v-tab-item :style="{visibility: visivel}">
+          <CalculoPeca />
         </v-tab-item>
-        <v-tab-item>
+        <v-tab-item :style="{visibility: visivel}">
           <TabelaProdutos />
         </v-tab-item>
-        <v-tab-item>
+        <v-tab-item :style="{visibility: visivel}">
           <TabelaOrcamentos />
         </v-tab-item>
       </v-tabs>
@@ -45,12 +45,13 @@ export default {
     CalculoPeca, TabelaProdutos, TabelaOrcamentos
   },
   data: () => ({
-    ativa: 1,
+    ativa: 0,
+    visivel: 'hidden',
+    qtde_abas: 2,
     quant_produtos: 0,
     quant_orcamentos: 0,
   }),
   created() {
-    this.ativa = 1
     eventbus.$on('novoProduto', () => {
       this.quant_produtos++
     })
@@ -64,9 +65,16 @@ export default {
     eventbus.$on('removeOrcamento', () => {
       this.quant_orcamentos--
     })
+    for (let i = this.qtde_abas; i >= 0; i--) {
+      setTimeout(() => {
+        this.ativa = i
+      }, 0)
+    }
   },
   mounted() {
-    this.ativa = 0
+    setTimeout(() => {
+      this.visivel = 'visible'
+    }, 450)
   }
 };
 </script>

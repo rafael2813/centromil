@@ -11,7 +11,7 @@
       class="elevation-1">
       <template v-for="(h, index) in headers" v-slot:[`item.${h.value}`]="{ item }">
         <div :key="index" class="align-center">
-          {{ virgula(item[h.value], h) }}
+          {{ item[h.value] }}
           <span v-if="h.icon">
             <v-icon v-if="h.icon === 'delete'"
               large :color=h.color @click="excluir(item)">
@@ -37,8 +37,6 @@
 
 <script>
   import eventbus from '@/eventbus'
-  import funcoes_formato from '@/functions/funcoes_formato'
-  import funcao_renumerar from '@/functions/funcao_renumerar'
 
   export default {
     data: () => ({
@@ -49,24 +47,17 @@
         { text: 'Nome', value: 'nome' },
         { text: 'Data_e_Hora', value: 'data_hora' },
         { text: 'Nº_Itens', value: 'n_itens', align: 'end' },
-        { text: 'Peso_Total', value: 'peso_total', align: 'end', formato: 'virgula' },
-        { text: 'Valor_Totalizado', value: 'valor_total', align: 'end', formato: 'moeda' },
+        { text: 'Peso_Totalizado', value: 'peso_total', align: 'end' },
+        { text: 'Valor_Totalizado', value: 'valor_total', align: 'end' },
         { text: '', value: 'carregar', align: 'center', sortable: false, icon: 'cart-variant', color: 'green' },
       ],
       page: 1,
       pageCount: 0,
     }),
     methods: {
-      virgula: (value, header) => {
-        const formato = header.formato
-        if (formato === 'virgula') return funcoes_formato.virgula(value)
-        else if (formato === 'moeda') return funcoes_formato.moeda(value)
-        else return value
-      },
       excluir(item) {
         this.items.splice(this.items.indexOf(item), 1)
-        funcao_renumerar.renumerar(this.items)
-        localStorage.setItem('produtos', JSON.stringify(this.items))
+        localStorage.setItem('orcamentos', JSON.stringify(this.items))
         eventbus.$emit('removeOrcamento')
       },
       carregar(item) {
