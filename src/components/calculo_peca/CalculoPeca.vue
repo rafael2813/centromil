@@ -72,6 +72,10 @@
         </v-btn>
       </div>
     </v-card>
+    <v-snackbar v-model="snackbar" :timeout="2500"
+      absolute bottom :color="cor_snackbar">
+      {{ texto_snackbar }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -116,6 +120,9 @@ export default {
     quantidade: null,
     produtos: [],
     id: 0,
+    snackbar: false,
+    texto_snackbar: 'Produto não pode ser acrescentado!',
+    cor_snackbar: 'red',
   }),
   computed: {
     area() {
@@ -208,8 +215,15 @@ export default {
         })
         funcao_renumerar.renumerar(this.produtos)
         localStorage.setItem('produtos', JSON.stringify(this.produtos))
+        this.texto_snackbar = 'Produto salvo!'
+        this.cor_snackbar = 'blue'
         eventbus.$emit('novoProduto')
       }
+      else {
+        this.texto_snackbar = 'Produto não pode ser salvo!'
+        this.cor_snackbar = 'red'
+      }
+      this.snackbar = true
     },
   },
   filters: {
@@ -218,7 +232,6 @@ export default {
   },
   created() {
     localStorage.setItem('produtos', JSON.stringify([]))
-    eventbus.$emit('novoProduto')
   }
 };
 </script>

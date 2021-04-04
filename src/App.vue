@@ -7,18 +7,24 @@
           Cálculo de Peça
         </v-tab>
         <v-tab>
-          <v-icon class="pr-3">mdi-cart-variant</v-icon>
+          <v-badge class="center" :content="quant_produtos"
+            :value="quant_produtos" color="red" overlap>
+          </v-badge>
+          <v-icon class="px-3">mdi-cart-variant</v-icon>
           Lista de Produtos
         </v-tab>
         <v-tab>
-          <v-icon class="pr-3">mdi-currency-brl</v-icon>
+          <v-badge class="center" :content="quant_orcamentos"
+            :value="quant_orcamentos" color="red" overlap>
+          </v-badge>
+          <v-icon class="px-3">mdi-currency-brl</v-icon>
           Orçamentos
         </v-tab>
         <v-tab-item>
-          <CalculoPeca />
+          <CalculoPeca/>
         </v-tab-item>
         <v-tab-item>
-          <TabelaPecas />
+          <TabelaProdutos />
         </v-tab-item>
         <v-tab-item>
           <TabelaOrcamentos />
@@ -29,19 +35,35 @@
 </template>
 
 <script>
+import eventbus from '@/eventbus'
 import CalculoPeca from '@/components/calculo_peca/CalculoPeca'
-import TabelaPecas from '@/components/lista_produtos/TabelaPecas'
+import TabelaProdutos from '@/components/lista_produtos/TabelaProdutos'
 import TabelaOrcamentos from '@/components/orcamentos/TabelaOrcamentos'
 export default {
   name: 'App',
   components: {
-    CalculoPeca, TabelaPecas, TabelaOrcamentos
+    CalculoPeca, TabelaProdutos, TabelaOrcamentos
   },
   data: () => ({
-    ativa: 1
+    ativa: 1,
+    quant_produtos: 0,
+    quant_orcamentos: 0,
   }),
   created() {
     this.ativa = 1
+    eventbus.$on('novoProduto', () => {
+      this.quant_produtos++
+    })
+    eventbus.$on('removeProduto', () => {
+      this.quant_produtos--
+    })
+    eventbus.$on('novoOrcamento', () => {
+      this.quant_produtos = 0
+      this.quant_orcamentos++
+    })
+    eventbus.$on('removeOrcamento', () => {
+      this.quant_orcamentos--
+    })
   },
   mounted() {
     this.ativa = 0

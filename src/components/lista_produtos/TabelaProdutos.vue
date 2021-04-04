@@ -25,10 +25,11 @@
           :length="pageCount">
         </v-pagination>
         <v-row class="px-6">
-          <v-col class="title">TOTAL</v-col>
-          <v-col cols="3" class="title red--text justify-content-end"
+          <v-col class="title">TOTAIS</v-col>
+          <v-col class="title red--text justify-content-end"
             align="right">
-             {{ valorTotal() }}
+              <span class="pr-5">{{ pesoTotal() }}</span>
+              <span class="pl-5">{{ valorTotal() }}</span>
           </v-col>
         </v-row>
       </template>
@@ -39,9 +40,13 @@
     <v-row class="px-4">
       <v-col cols="4">
         <v-text-field
-          v-model="nome" label="Nome" dense outlined
-          color="blue darken-4"/>
-        <v-btn block class="green white--text mt-9 justify-space-between">
+          v-model="empresa" label="Empresa"
+          dense outlined color="blue darken-4"/>
+        <v-text-field
+          v-model="nome" label="Nome" class="my-n4"
+          dense outlined color="blue darken-4"/>
+        <v-btn block class="mt-1 green white--text justify-space-between"
+          @click="salvarOrcamento">
           Salvar como Orçamento
           <div>
             <v-icon class="pl-3">mdi-plus</v-icon>
@@ -55,6 +60,10 @@
       </v-col>
     </v-row>
   </v-card>
+  <v-snackbar v-model="snackbar" :timeout="2500"
+    absolute bottom :color="cor_snackbar">
+    {{ texto_snackbar }}
+  </v-snackbar>
 </v-container>
 </template>
 
@@ -84,9 +93,14 @@
         { text: 'Valor_Totalizado', value: 'valor_total', align: 'end', formato: 'moeda' },
       ],
       nome: '',
+      empresa: '',
       descricao: '',
+      orcamentos: [],
       page: 1,
       pageCount: 0,
+      snackbar: false,
+      texto_snackbar: 'Orçamento não pode ser salvo!',
+      cor_snackbar: 'red',
     }),
     methods: {
       valorTotal() {
@@ -95,6 +109,13 @@
           return funcoes_formato.moeda(valor)
         }
         return 'R$ 0,000'
+      },
+      pesoTotal() {
+        if (this.items !== {}) {
+          const valor = this.items.reduce((acc, i) => acc + (i['peso_total'] || 0), 0)
+          return funcoes_formato.virgula(valor) + ' kg'
+        }
+        return '0,000 kg'
       },
       virgula: (value, header) => {
         const formato = header.formato
@@ -106,12 +127,41 @@
         this.items.splice(this.items.indexOf(item), 1)
         funcao_renumerar.renumerar(this.items)
         localStorage.setItem('produtos', JSON.stringify(this.items))
+        eventbus.$emit('removeProduto')
       },
+      salvarOrcamento() {
+        if (this.items.length && this.empresa && this.nome) {
+          this.orcamentos.push({
+            empresa: this.empresa,
+            nome: this.nome,
+            data_hora: new Date().toLocaleString(),
+            n_itens: this.items.length,
+            items: this.items,
+            peso_total: this.pesoTotal(),
+            valor_total: this.valorTotal()
+          })
+          localStorage.setItem('orcamentos', JSON.stringify(this.orcamentos))
+          localStorage.setItem('produtos', JSON.stringify([]))
+          this.empresa = ''
+          this.nome = ''
+          this.descricao = ''
+          this.texto_snackbar = 'Orçamento salvo!'
+          this.cor_snackbar = 'blue'
+          eventbus.$emit('novoProduto')
+          eventbus.$emit('novoOrcamento')
+        }
+        else {
+          this.texto_snackbar = 'Orçamento não pode ser salvo!'
+          this.cor_snackbar = 'red'
+        }
+        this.snackbar = true
+      }
     },
     created() {
       eventbus.$on('novoProduto', () => {
         this.items = JSON.parse(localStorage.getItem('produtos'))
       })
+      localStorage.setItem('orcamentos', JSON.stringify([]))
     },
   }
 </script>

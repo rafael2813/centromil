@@ -42,17 +42,10 @@
 
   export default {
     data: () => ({
-      items: [{
-        id: 1,
-        nome: 'Marcio',
-        data_hora: '15/11/2020 16:30',
-        n_itens: 5,
-        peso_total: 75.500,
-        valor_total: 225.367,
-      }],
+      items: [],
       headers: [
         { text: '', value: 'excluir', align: 'center', sortable: false, icon: 'delete', color: 'red' },
-        { text: 'Item', value: 'id' },
+        { text: 'Empresa', value: 'empresa' },
         { text: 'Nome', value: 'nome' },
         { text: 'Data_e_Hora', value: 'data_hora' },
         { text: 'Nº_Itens', value: 'n_itens', align: 'end' },
@@ -74,14 +67,15 @@
         this.items.splice(this.items.indexOf(item), 1)
         funcao_renumerar.renumerar(this.items)
         localStorage.setItem('produtos', JSON.stringify(this.items))
+        eventbus.$emit('removeOrcamento')
       },
       carregar(item) {
         console.log({...item})
       },
     },
     created() {
-      eventbus.$on('novoProduto', () => {
-        this.items = JSON.parse(localStorage.getItem('produtos'))
+      eventbus.$on('novoOrcamento', () => {
+        this.items = JSON.parse(localStorage.getItem('orcamentos'))
       })
     },
   }
