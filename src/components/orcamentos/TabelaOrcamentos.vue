@@ -43,6 +43,7 @@
       items: [],
       headers: [
         { text: '', value: 'excluir', align: 'center', sortable: false, icon: 'delete', color: 'red' },
+        { text: 'Cliente_Fornecedor', value: 'client_fornec' },
         { text: 'Empresa', value: 'empresa' },
         { text: 'Nome', value: 'nome' },
         { text: 'Data_e_Hora', value: 'data_hora' },

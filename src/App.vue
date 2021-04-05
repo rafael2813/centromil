@@ -74,7 +74,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.visivel = 'visible'
-    }, 450)
+    }, 700)
   }
 };
 </script>

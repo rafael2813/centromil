@@ -67,7 +67,7 @@
         VALOR TOTAL = {{ valor_total | moeda }}
         <v-btn class='green white--text' @click="salvarProduto">
           Acrescentar à Lista de Produtos
-          <v-icon class="pl-5">mdi-plus</v-icon>
+          <v-icon class="pl-5 pr-2">mdi-plus-thick</v-icon>
           <v-icon>mdi-cart-variant</v-icon>
         </v-btn>
       </div>

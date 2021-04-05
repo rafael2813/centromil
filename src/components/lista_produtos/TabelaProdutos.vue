@@ -5,7 +5,7 @@
       :headers="headers"
       :items="items"
       hide-default-footer
-      :items-per-page="5"
+      :items-per-page="4"
       :page.sync="page"
       @page-count="pageCount = $event"
       class="elevation-1">
@@ -37,26 +37,51 @@
     <v-divider></v-divider>
   </v-card>
   <v-card class="mx-1 mt-8 mb-4" tile elevation=10>
-    <v-row class="px-4">
+    <v-row class="px-4 align-center">
       <v-col cols="4">
         <v-text-field
           v-model="empresa" label="Empresa"
           dense outlined color="blue darken-4"/>
+      </v-col>
+      <v-col cols="4">
         <v-text-field
-          v-model="nome" label="Nome" class="my-n4"
+          v-model="nome" label="Nome"
           dense outlined color="blue darken-4"/>
-        <v-btn block class="mt-1 green white--text justify-space-between"
-          @click="salvarOrcamento">
-          Salvar como Orçamento
+      </v-col>
+      <v-col cols="4">
+        <v-radio-group v-model="client_fornec" row>
+          <v-radio label="Cliente" value="Cliente"
+            color="blue darken-4" class="px-8"></v-radio>
+          <v-radio label="Fornecedor" value="Fornecedor" color="blue darken-4"></v-radio>
+        </v-radio-group>
+      </v-col>
+    </v-row>
+    <v-row class="px-4 mt-n8 mb-n12">
+      <v-col cols="12">
+        <v-textarea v-model="descricao" outlined rows="3"
+          label="Descrição"></v-textarea>
+      </v-col>
+    </v-row>
+    <v-row class="justify-space-between pl-4 pr-7">
+      <v-col cols="4">
+        <v-btn v-show="editar" block class="red white--text"
+          @click="cancelarOrcamento">
+          Cancelar Alteração
           <div>
-            <v-icon class="pl-3">mdi-plus</v-icon>
+            <v-icon class="pl-3 pr-2">mdi-close-thick</v-icon>
             <v-icon>mdi-currency-brl</v-icon>
           </div>
         </v-btn>
       </v-col>
-      <v-col cols="8">
-        <v-textarea v-model="descricao" outlined rows="4"
-          label="Descrição"></v-textarea>
+      <v-col cols="4">
+        <v-btn block class="green white--text"
+          @click="salvarOrcamento">
+          Salvar como Orçamento
+          <div>
+            <v-icon class="pl-3 pr-2">mdi-plus-thick</v-icon>
+            <v-icon>mdi-currency-brl</v-icon>
+          </div>
+        </v-btn>
       </v-col>
     </v-row>
   </v-card>
@@ -95,12 +120,14 @@
       nome: '',
       empresa: '',
       descricao: '',
+      client_fornec: null,
       orcamentos: [],
       page: 1,
       pageCount: 0,
       snackbar: false,
       texto_snackbar: 'Orçamento não pode ser salvo!',
       cor_snackbar: 'red',
+      editar: false,
     }),
     methods: {
       valorTotal() {
@@ -130,8 +157,9 @@
         eventbus.$emit('removeProduto')
       },
       salvarOrcamento() {
-        if (this.items.length && this.empresa && this.nome) {
+        if (this.items.length && this.empresa && this.nome && this.client_fornec) {
           this.orcamentos.push({
+            client_fornec: this.client_fornec,
             empresa: this.empresa,
             nome: this.nome,
             descricao: this.descricao,
@@ -145,6 +173,7 @@
           localStorage.setItem('produtos', JSON.stringify([]))
           this.empresa = ''
           this.nome = ''
+          this.client_fornec = null
           this.descricao = ''
           this.texto_snackbar = 'Orçamento salvo!'
           this.cor_snackbar = 'blue'
@@ -156,6 +185,9 @@
           this.cor_snackbar = 'red'
         }
         this.snackbar = true
+      },
+      cancelarOrcamento() {
+        
       }
     },
     created() {
