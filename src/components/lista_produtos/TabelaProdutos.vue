@@ -159,6 +159,7 @@
       },
       salvarOrcamento() {
         if (this.items.length && this.empresa && this.nome && this.client_fornec) {
+          this.orcamentos = JSON.parse(localStorage.getItem('orcamentos'))
           let orcam = {
             client_fornec: this.client_fornec,
             empresa: this.empresa,

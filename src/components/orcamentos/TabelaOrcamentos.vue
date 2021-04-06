@@ -59,6 +59,7 @@
       excluir(item) {
         this.items.splice(this.items.indexOf(item), 1)
         localStorage.setItem('orcamentos', JSON.stringify(this.items))
+        this.items = JSON.parse(localStorage.getItem('orcamentos'))
         eventbus.$emit('removeOrcamento')
         eventbus.$emit('cancelarOrcamento')
       },

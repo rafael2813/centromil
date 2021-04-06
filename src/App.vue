@@ -63,6 +63,7 @@ export default {
       this.quant_orcamentos++
     })
     eventbus.$on('removeOrcamento', () => {
+      this.quant_produtos = 0
       this.quant_orcamentos--
     })
     eventbus.$on('carregarOrcamento', () => {
@@ -83,6 +84,13 @@ export default {
     localStorage.clear()
   },
   mounted() {
+    localStorage.setItem('produtos', JSON.stringify([]))
+    localStorage.setItem('orcamentos', JSON.stringify([]))
+    localStorage.setItem('id', JSON.stringify(null))
+    localStorage.setItem('empresa', JSON.stringify(''))
+    localStorage.setItem('nome', JSON.stringify(''))
+    localStorage.setItem('descricao', JSON.stringify(''))
+    localStorage.setItem('client_fornec', JSON.stringify(null))
     setTimeout(() => {
       this.visivel = 'visible'
     }, 1000)
