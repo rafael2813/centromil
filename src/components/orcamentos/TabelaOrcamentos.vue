@@ -60,13 +60,25 @@
         this.items.splice(this.items.indexOf(item), 1)
         localStorage.setItem('orcamentos', JSON.stringify(this.items))
         eventbus.$emit('removeOrcamento')
+        eventbus.$emit('cancelarOrcamento')
       },
       carregar(item) {
-        console.log({...item})
+        const id = this.items.indexOf(item)
+        const it = JSON.stringify(item)
+        localStorage.setItem('produtos', JSON.stringify(JSON.parse(it)['items']))
+        localStorage.setItem('id', id)
+        localStorage.setItem('empresa', JSON.stringify(JSON.parse(it)['empresa']))
+        localStorage.setItem('nome', JSON.stringify(JSON.parse(it)['nome']))
+        localStorage.setItem('descricao', JSON.stringify(JSON.parse(it)['descricao']))
+        localStorage.setItem('client_fornec', JSON.stringify(JSON.parse(it)['client_fornec']))
+        eventbus.$emit('carregarOrcamento')
       },
     },
     created() {
       eventbus.$on('novoOrcamento', () => {
+        this.items = JSON.parse(localStorage.getItem('orcamentos'))
+      })
+      eventbus.$on('editarOrcamento', () => {
         this.items = JSON.parse(localStorage.getItem('orcamentos'))
       })
     },

@@ -117,6 +117,7 @@
         { text: 'Peso_Total', value: 'peso_total', align: 'end', formato: 'virgula' },
         { text: 'Valor_Totalizado', value: 'valor_total', align: 'end', formato: 'moeda' },
       ],
+      id: 0,
       nome: '',
       empresa: '',
       descricao: '',
@@ -158,7 +159,7 @@
       },
       salvarOrcamento() {
         if (this.items.length && this.empresa && this.nome && this.client_fornec) {
-          this.orcamentos.push({
+          let orcam = {
             client_fornec: this.client_fornec,
             empresa: this.empresa,
             nome: this.nome,
@@ -168,7 +169,13 @@
             items: this.items,
             peso_total: this.pesoTotal(),
             valor_total: this.valorTotal()
-          })
+          }
+          if (!this.editar) {
+            this.orcamentos.push(orcam)
+          }
+          else {
+            this.orcamentos[localStorage.getItem('id')] = orcam
+          }
           localStorage.setItem('orcamentos', JSON.stringify(this.orcamentos))
           localStorage.setItem('produtos', JSON.stringify([]))
           this.empresa = ''
@@ -177,8 +184,14 @@
           this.descricao = ''
           this.texto_snackbar = 'Orçamento salvo!'
           this.cor_snackbar = 'blue'
-          eventbus.$emit('novoProduto')
-          eventbus.$emit('novoOrcamento')
+          if (!this.editar) {
+            eventbus.$emit('novoOrcamento')
+          }
+          else {
+            eventbus.$emit('editarOrcamento')
+          }
+          this.items = JSON.parse(localStorage.getItem('produtos'))
+          this.editar = false
         }
         else {
           this.texto_snackbar = 'Orçamento não pode ser salvo!'
@@ -187,12 +200,30 @@
         this.snackbar = true
       },
       cancelarOrcamento() {
-        
+        eventbus.$emit('cancelarOrcamento')
       }
     },
     created() {
       eventbus.$on('novoProduto', () => {
         this.items = JSON.parse(localStorage.getItem('produtos'))
+      })
+      eventbus.$on('carregarOrcamento', () => {
+        this.items = JSON.parse(localStorage.getItem('produtos'))
+        this.empresa = JSON.parse(localStorage.getItem('empresa'))
+        this.nome = JSON.parse(localStorage.getItem('nome'))
+        this.descricao = JSON.parse(localStorage.getItem('descricao'))
+        this.client_fornec = JSON.parse(localStorage.getItem('client_fornec'))
+        this.editar = true
+      })
+      eventbus.$on('cancelarOrcamento', () => {
+        localStorage.setItem('produtos', JSON.stringify([]))
+        this.items = JSON.parse(localStorage.getItem('produtos'))
+        this.id = JSON.parse(localStorage.getItem(null))
+        this.empresa = JSON.parse(localStorage.getItem(''))
+        this.nome = JSON.parse(localStorage.getItem(''))
+        this.descricao = JSON.parse(localStorage.getItem(''))
+        this.client_fornec = JSON.parse(localStorage.getItem(null))
+        this.editar = false
       })
     },
   }

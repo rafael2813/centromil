@@ -65,16 +65,27 @@ export default {
     eventbus.$on('removeOrcamento', () => {
       this.quant_orcamentos--
     })
+    eventbus.$on('carregarOrcamento', () => {
+      this.quant_produtos = JSON.parse(localStorage.getItem('produtos')).length
+    })
+    eventbus.$on('editarOrcamento', () => {
+      this.quant_produtos = 0
+      this.quant_orcamentos = JSON.parse(localStorage.getItem('orcamentos')).length
+    })
+    eventbus.$on('cancelarOrcamento', () => {
+      this.quant_produtos = 0
+    })
     for (let i = this.qtde_abas; i >= 0; i--) {
       setTimeout(() => {
         this.ativa = i
       }, 0)
     }
+    localStorage.clear()
   },
   mounted() {
     setTimeout(() => {
       this.visivel = 'visible'
-    }, 700)
+    }, 1000)
   }
 };
 </script>
