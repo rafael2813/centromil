@@ -51,7 +51,7 @@
       <v-col cols="4">
         <v-radio-group v-model="client_fornec" row>
           <v-radio label="Cliente" value="Cliente"
-            color="blue darken-4" class="px-8"></v-radio>
+            color="blue darken-4" class="px-6"></v-radio>
           <v-radio label="Fornecedor" value="Fornecedor" color="blue darken-4"></v-radio>
         </v-radio-group>
       </v-col>
