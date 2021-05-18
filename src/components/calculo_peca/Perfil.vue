@@ -23,7 +23,7 @@ export default {
   name: 'Medida',
   components: { },
   data: () => ({
-    perfis: ['Chapa', 'Perfil', 'Tubo', 'Vergalhão'],
+    perfis: ['Bobina', 'Chapa', 'Perfil', 'Tubo', 'Vergalhão'],
     secoes: [''],
   }),
   props: ['geometria', 'medidas'],
@@ -45,6 +45,10 @@ export default {
       else if (this.geometria.perfil === 'Chapa') {
         this.secoes = ['Chapa']
         this.geometria.secao = 'Chapa'
+      }
+      else if (this.geometria.perfil === 'Bobina') {
+        this.secoes = ['Bobina']
+        this.geometria.secao = 'Bobina'
       }
     },
     secao_transversal() {
@@ -90,6 +94,13 @@ export default {
       }
       else if (this.geometria.perfil === 'Chapa' &&
           this.geometria.secao === 'Chapa') {
+        this.medidas[0].dimensao = 'Largura'
+        this.medidas[1].visivel = false
+        this.medidas[1].valor = 0
+        this.geometria.formula = 'Largura x Espessura'
+      }
+      else if (this.geometria.perfil === 'Bobina' &&
+          this.geometria.secao === 'Bobina') {
         this.medidas[0].dimensao = 'Largura'
         this.medidas[1].visivel = false
         this.medidas[1].valor = 0

@@ -30,6 +30,9 @@ function area_calculada(secao, arr_valores, espessura) {
     else if (secao === 'Chapa') {
       calculada = arr_valores[0] * arr_valores[2]
     }
+    else if (secao === 'Bobina') {
+      calculada = arr_valores[0] * arr_valores[2]
+    }
     calculada = Number.isNaN(calculada) ? 0 : calculada
     return parseFloat(calculada.toFixed(3))
 }
